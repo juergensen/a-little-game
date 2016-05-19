@@ -2,9 +2,26 @@
 
 const canvas = document.getElementById("myCanvas");
 const ctx =  canvas.getContext("2d");
-var playerImg = document.getElementById("playerImg");
-var npcImg = document.getElementById("npcImg");
-var shotImg = document.getElementById("shotImg");
+//var playerImg = new Image(); playerImg.src = "./image/player_space_ship.png"
+//var npcImg = new Image(); npcImg.src = "./image/npc_space_ship.png"
+//var shotImg = new Image(); shotImg.src = "./image/shot.png"
+
+var playerImg = document.getElementById('playerImg')
+var npcImg = document.getElementById('npcImg')
+var playerImg = document.getElementById('playerImg')
+window.addEventListener('resize', resizeCanvas, false);
+
+function resizeCanvas() {
+        //canvas.width = window.innerWidth;
+        //canvas.height = window.innerHeight;
+
+        /**
+         * Your drawings need to be inside this function otherwise they will be reset when
+         * you resize the browser window and the canvas goes will be cleared.
+         */
+}
+resizeCanvas();
+
 /*
 class Game {
   constructor(canvas) {
@@ -142,6 +159,7 @@ class Player {
     this.shotDelayConfig = 10
     this.shotDelay = 0;
     this.kills = 0;
+    this.hitPlayer = 0;
     if (config.name) { this.name = config.name }
     if (config.key) { this.key.keys = config.key }
     if (config.pos) { this.pos = config.pos }
@@ -149,7 +167,6 @@ class Player {
 
     var thisClass = this
     document.addEventListener("keydown", function (evt) {
-      document.getElementById('keynum').innerHTML = evt.which
       for (var key in thisClass.key.keys) {
         if (evt.which === thisClass.key.keys[key]) {
           thisClass.key.trig[key] = true
@@ -194,7 +211,6 @@ class Player {
     this.keyEvents()
     this.move()
     this.shotEvents()
-    console.log(this.x);
   }
 
   goForward() {
@@ -254,7 +270,9 @@ class Shoot {
     if (config.rv) { this.rv = config.rv }
     if (config.x) { this.x = config.x }
   }
+  getRV () { this.rv = {x:Math.cos(this.x), y:Math.sin(this.x)} }
   move() {
+    this.getRV()
     this.pos.x += this.rv.x * this.speed
     this.pos.y += this.rv.y * this.speed
     if (this.pos.x < -32) { this.pos.x = -32; this.delete = true }
@@ -293,11 +311,31 @@ function collision(players, npcs, cb) {
     var shots = players[i].shots
     for (var f = 0; f < shots.length; f++) {
       for (var r = 0; r < npcs.length; r++) {
-        if (shots[f].pos.x+8 >= npcs[r].pos.x &&
-            shots[f].pos.x-8 <= npcs[r].pos.x &&
-            shots[f].pos.y+8 >= npcs[r].pos.y &&
-            shots[f].pos.y-8 <= npcs[r].pos.y) {
-          cb(i, f, r)//Player, Shot, NPC
+        if (shots[f] !== undefined) {
+          if (shots[f].pos.x+16 >= npcs[r].pos.x &&
+              shots[f].pos.x-16 <= npcs[r].pos.x &&
+              shots[f].pos.y+16 >= npcs[r].pos.y &&
+              shots[f].pos.y-16 <= npcs[r].pos.y) {
+            cb(i, f, r)//Player, Shot, NPC
+          }
+        }
+      }
+    }
+  }
+  for (var i = 0; i < players.length; i++) {
+    var shots = players[i].shots
+    for (var r = 0; r < shots.length; r++) {
+      shots[r]
+      for (var f = 0; f < players.length; f++) {
+        players[f]
+        if (shots[r].pos.x+8 >= players[f].pos.x &&
+            shots[r].pos.x-8 <= players[f].pos.x &&
+            shots[r].pos.y+8 >= players[f].pos.y &&
+            shots[r].pos.y-8 <= players[f].pos.y) {
+          if (f != i) {
+            console.log(players[f].name+ " got hit by "+players[i].name);
+            players[i].hitPlayer++;
+          }
         }
       }
     }
@@ -309,8 +347,8 @@ var tickCount = 0,
     ticksPerFrame = 3;
 
   var players = [
-    new Player({name:"supermomme"}, canvas, ctx),
-    new Player({name:"Player 20", key:{up:38,down:40,left:37,right:39,shoot:13}, pos:{x:20,y:20}}, canvas, ctx)
+    new Player({name:"Barne", pos:{x:20, y:Math.random()*canvas.height}}, canvas, ctx),
+    new Player({name:"supermomme", key:{up:38,down:40,left:37,right:39,shoot:13}, pos:{x:20,y:Math.random()*canvas.height}}, canvas, ctx)
   ]
   var npcs = [
     new Npc({}, canvas, ctx)
@@ -321,6 +359,22 @@ function gameLoop () {
   tickCount += 1;
 
   //Do Stuff
+  //collision
+  collision(players, npcs, function (playerId, shotId, npcId) {
+    npcs.splice(npcId,1);
+    players[playerId].shots.splice(shotId,1)
+    players[playerId].kills++;
+  })
+  //collision END
+  //SPAWN NPC
+  if (Math.round(Math.random()*25) == 0) {
+    if (npcs.length <= 10) {
+      npcs.push(new Npc({pos:{x:canvas.width+16, y:Math.random()*canvas.height}}, canvas, ctx))
+    }
+  }
+  //SPAWN NPC END
+
+
   //Player
   players[0].ctx.clearRect(0-100, 0-100, canvas.width+100, canvas.height+100);
   for (var i = 0; i < players.length; i++) {
@@ -355,13 +409,22 @@ function gameLoop () {
     npcs[i].ctx.translate(-npcs[i].pos.x, -npcs[i].pos.y);
   }
   //NPC End
-  //collision
-  collision(players, npcs, function (playerId, shotId, npcId) {
-    npcs.splice(npcId,1);
-    players[playerId].shots.splice(shotId,1)
-    players[playerId].kills++;
-  })
-  //collision END
+  //Scoreboard
+  var title = "Kills";
+  ctx.font = "20px Arial";
+  ctx.fillText(title,canvas.width-ctx.measureText(title).width,20);
+  for (var i = 0; i < players.length; i++) {
+    ctx.fillText(players[i].name+": "+players[i].kills,canvas.width-ctx.measureText(players[i].name+": "+players[i].kills).width,20*(i+2));
+  }
+  //Scoreboard END
+  //Player Hit Scoreboard
+  var title = "Hit Player";
+  ctx.font = "20px Arial";
+  ctx.fillText(title,0,20);
+  for (var i = 0; i < players.length; i++) {
+    ctx.fillText(players[i].name+": "+players[i].hitPlayer,0,20*(i+2));
+  }
+  //Player Hit Scoreboard
   //Do Stuff End
 }
 

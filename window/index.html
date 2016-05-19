@@ -1,18 +1,27 @@
 <html>
   <head>
     <title>Game</title>
-
+    <style>
+      * { margin:0; padding:0; overflow:hidden; }
+      #myCanvas {
+        border:1px solid #000000;
+        display:block; /* To remove the scrollbars */
+      }
+    </style>
   </head>
   <body>
-    <canvas id="myCanvas" width="1000" height="500" style="border:1px solid #000000;">
-    </canvas></br>
-    Players: <img id="playerImg" src="./image/player_space_ship.png"></br>
+    <canvas id="myCanvas" width="1000" height="600">
+    </canvas>
+    <img id="playerImg" src="./image/player_space_ship.png">
+    <img id="npcImg" src="./image/npc_space_ship.png">
+    <img id="shotImg" src="./image/shot.png">
+    <!--Players: <img id="playerImg" src="./image/player_space_ship.png"></br>
     NPCs:    <img id="npcImg" src="./image/npc_space_ship.png"></br>
     Shots:    <img id="shotImg" src="./image/shot.png"></br>
     <button type="button" onclick="pause().toggle()">Pause</button></br>
     <span id="keynum">Tastennummer</span></br>
     <span id="shootDelayPlayer1">shootDelayPlayer1</span></br>
-    <span id="timer">Timer</span>
+    <span id="timer">Timer</span>-->
   </body>
   <!--<script src="main.js"></script>-->
   <script src="game.js"></script>
