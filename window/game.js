@@ -12,7 +12,8 @@ var defaultAcceleration = 0.1,
     drag = 0.99,
     doDrag = true;
 //END options
-
+//var shotSound = new Howl({urls: ['./sound/shot_sound.mp3']})
+//var npcExplosionSound = new Howl({urls: ['./sound/explosions.mp3']});
 const canvas = document.getElementById("myCanvas");
 const ctx =  canvas.getContext("2d");
 //var playerImg = new Image(); playerImg.src = "./image/player_space_ship.png"
@@ -257,6 +258,7 @@ class Player {
         x:this.x,
         speed:this.speed
       }, canvas))
+      //shotSound.play();
     }
   }
   shotEvents() {
@@ -381,6 +383,7 @@ function gameLoop () {
     npcs.splice(npcId,1);
     players[playerId].shots.splice(shotId,1)
     players[playerId].kills++;
+    //npcExplosionSound.play();
   })
   //collision END
   //SPAWN NPC
