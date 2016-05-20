@@ -4,8 +4,7 @@
 var defaultAcceleration = 0.1,
     defaultAngularAcceleration = 0.05,
     defaultMaxSpeed = 10,
-    defaultShotDelayConfig = 0,
-    defaultShotDelay = 0,
+    defaultShotDelayConfig = 10,
     defaultShotSpeed = 5,
     defaultNpcSpeed = 1.5,
     NpcSpawnRate = 25,
@@ -171,7 +170,7 @@ class Player {
     this.pos = {x:10,y:10}
     this.shots = [];
     this.shotDelayConfig = defaultShotDelayConfig;
-    this.shotDelay = defaultShotDelay;
+    this.shotDelay = 0;
     this.kills = 0;
     this.hitPlayer = 0;
     if (config.name) { this.name = config.name }
@@ -247,7 +246,7 @@ class Player {
     if (this.pos.y < 0) { this.pos.y = 0 }
     if (this.pos.x > this.canvas.width) { this.pos.x = this.canvas.width }
     if (this.pos.y > this.canvas.height) { this.pos.y = this.canvas.height }
-    if (doDrag && !this.key.trig.up){this.speed *= drag}
+    if (doDrag && !this.key.trig.up){this.speed *= drag; if(this.speed < 0.05){this.speed = 0}}
   }
   newShoot() {
     if (this.shotDelay == 0) {
