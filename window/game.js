@@ -1,5 +1,19 @@
 'use strict';
 
+//options
+var defaultAcceleration = 0.1,
+    defaultAngularAcceleration = 0.05,
+    defaultMaxSpeed = 10,
+    defaultShotDelayConfig = 0,
+    defaultShotDelay = 0,
+    defaultShotSpeed = 5,
+    defaultNpcSpeed = 1.5,
+    NpcSpawnRate = 25,
+    NpcLimit = 10,
+    drag = 0.99,
+    doDrag = false;
+//END options
+
 const canvas = document.getElementById("myCanvas");
 const ctx =  canvas.getContext("2d");
 //var playerImg = new Image(); playerImg.src = "./image/player_space_ship.png"
@@ -147,17 +161,17 @@ class Player {
     this.canvas = canvas;
     this.ctx = ctx;
     this.name = "Player"
-    this.acceleration = 0.1
-    this.angularAcceleration = 0.05
+    this.acceleration = defaultAcceleration
+    this.angularAcceleration = defaultAngularAcceleration
     this.speed = 0
-    this.maxSpeed = 10
+    this.maxSpeed = defaultMaxSpeed
     this.x = 0
     this.key = {keys:{up:87,left:65,down:83,right:68,shoot:32},
                 trig:{up:false,left:false,down:false,right:false,shoot:false}}
     this.pos = {x:10,y:10}
     this.shots = [];
-    this.shotDelayConfig = 10
-    this.shotDelay = 0;
+    this.shotDelayConfig = defaultShotDelayConfig;
+    this.shotDelay = defaultShotDelay;
     this.kills = 0;
     this.hitPlayer = 0;
     if (config.name) { this.name = config.name }
@@ -224,7 +238,7 @@ class Player {
   goLeft() { this.x -= this.angularAcceleration }
   goRight() { this.x += this.angularAcceleration }
 
-  getRV () { this.rv = {x:Math.cos(this.x), y:Math.sin(this.x)} }
+  getRV () { this.rv = {x:Math.cos(this.x), y:Math.sin(this.x)};  }
   move() {
     this.getRV()
     this.pos.x += this.rv.x * this.speed
@@ -233,6 +247,7 @@ class Player {
     if (this.pos.y < 0) { this.pos.y = 0 }
     if (this.pos.x > this.canvas.width) { this.pos.x = this.canvas.width }
     if (this.pos.y > this.canvas.height) { this.pos.y = this.canvas.height }
+    if (doDrag && !this.key.trig.up){this.speed *= drag}
   }
   newShoot() {
     if (this.shotDelay == 0) {
@@ -261,7 +276,7 @@ class Shoot {
   constructor(config, canvas) {
     this.pos = {x:0,y:0}
     this.rv = {x:0,y:0}
-    this.speed = 10
+    this.speed = defaultShotSpeed
     this.x = 0
     this.delete = false
     this.canvas = canvas
@@ -289,9 +304,9 @@ class Npc {
     this.pos = {x:canvas.width-20,y:40}
 
     this.angularAcceleration = 0.03
-    this.speed = 1.5
+    this.speed = defaultNpcSpeed
     this.x = Math.PI
-
+    this.delete = false
     if (config.pos) { this.pos = config.pos }
   }
   getRV () { this.rv = {x:Math.cos(this.x), y:Math.sin(this.x)} }
@@ -299,8 +314,8 @@ class Npc {
     this.getRV()
     this.pos.x += this.rv.x * this.speed
     this.pos.y += this.rv.y * this.speed
-    if (this.pos.x < 0) { this.pos.x = 0 }
-    if (this.pos.y < 0) { this.pos.y = 0 }
+    if (this.pos.x < 0) { this.pos.x = -32; this.delete = true  }
+    if (this.pos.y < 0) { this.pos.y = -32; this.delete = true }
     if (this.pos.x > this.canvas.width) { this.pos.x = this.canvas.width }
     if (this.pos.y > this.canvas.height) { this.pos.y = this.canvas.height }
   }
@@ -328,15 +343,17 @@ function collision(players, npcs, cb) {
       shots[r]
       for (var f = 0; f < players.length; f++) {
         players[f]
+        if (shots[f] !== undefined){
         if (shots[r].pos.x+8 >= players[f].pos.x &&
             shots[r].pos.x-8 <= players[f].pos.x &&
             shots[r].pos.y+8 >= players[f].pos.y &&
             shots[r].pos.y-8 <= players[f].pos.y) {
           if (f != i) {
             console.log(players[f].name+ " got hit by "+players[i].name);
+            players[i].shots.splice(r,1);
             players[i].hitPlayer++;
           }
-        }
+        }}
       }
     }
   }
@@ -367,8 +384,8 @@ function gameLoop () {
   })
   //collision END
   //SPAWN NPC
-  if (Math.round(Math.random()*25) == 0) {
-    if (npcs.length <= 10) {
+  if (Math.round(Math.random()*NpcSpawnRate) == 0) {
+    if (npcs.length < NpcLimit) {
       npcs.push(new Npc({pos:{x:canvas.width+16, y:Math.random()*canvas.height}}, canvas, ctx))
     }
   }
@@ -401,7 +418,8 @@ function gameLoop () {
   //NPC
   for (var i = 0; i < npcs.length; i++) {
     npcs[i].move()
-
+    if (npcs[i].delete) {
+      npcs.splice(i,1);}
     npcs[i].ctx.translate(npcs[i].pos.x, npcs[i].pos.y);
     npcs[i].ctx.rotate(npcs[i].x);
     npcs[i].ctx.drawImage(npcImg, -8, -8);
