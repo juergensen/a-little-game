@@ -7,10 +7,10 @@ var defaultAcceleration = 0.1,
     defaultShotDelayConfig = 10,
     defaultShotSpeed = 5,
     defaultNpcSpeed = 1.5,
-    NpcSpawnRate = 25,
-    NpcLimit = 10,
+    npcSpawnRate = 25,
+    npcLimit = 10,
     drag = 0.99,
-    doDrag = false;
+    doDrag = true;
 //END options
 
 const canvas = document.getElementById("myCanvas");
@@ -369,6 +369,7 @@ var tickCount = 0,
   var npcs = [
     new Npc({}, canvas, ctx)
   ]
+  var npcGoal = 0;
 
 function gameLoop () {
   window.requestAnimationFrame(gameLoop);
@@ -383,8 +384,8 @@ function gameLoop () {
   })
   //collision END
   //SPAWN NPC
-  if (Math.round(Math.random()*NpcSpawnRate) == 0) {
-    if (npcs.length < NpcLimit) {
+  if (Math.round(Math.random()*npcSpawnRate) == 0) {
+    if (npcs.length < npcLimit) {
       npcs.push(new Npc({pos:{x:canvas.width+16, y:Math.random()*canvas.height}}, canvas, ctx))
     }
   }
@@ -418,7 +419,9 @@ function gameLoop () {
   for (var i = 0; i < npcs.length; i++) {
     npcs[i].move()
     if (npcs[i].delete) {
-      npcs.splice(i,1);}
+      npcs.splice(i,1);
+      npcGoal++;
+    }
     npcs[i].ctx.translate(npcs[i].pos.x, npcs[i].pos.y);
     npcs[i].ctx.rotate(npcs[i].x);
     npcs[i].ctx.drawImage(npcImg, -8, -8);
@@ -442,6 +445,10 @@ function gameLoop () {
     ctx.fillText(players[i].name+": "+players[i].hitPlayer,0,20*(i+2));
   }
   //Player Hit Scoreboard
+  //NPC Goal
+  ctx.font = "20px Arial";
+  ctx.fillText("Npc Goal: "+npcGoal,canvas.width-ctx.measureText("Npc Goal: "+npcGoal).width,canvas.height);
+  //NPC Goal End
   //Do Stuff End
 }
 
