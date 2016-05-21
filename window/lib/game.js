@@ -13,12 +13,14 @@ module.exports = class Game {
       angularAcceleration: 0.05,
       maxSpeed: 10,
       shotDelayConfig: 10,
-      shotSpeed: 30,
+      shotSpeed: 15,
+      maxShotSpeed: 15,
       npcSpeed: 1.5,
       npcSpawnRate: 25,
       npcLimit: 10,
       drag: 0.99,
-      doDrag: true
+      doDrag: true,
+      shotAcceleration: 1
     }
 
     this.objects.push(new Player(this, "Torge"));

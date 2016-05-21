@@ -95,9 +95,13 @@ module.exports = class Player extends Entity {
     super.update();
     this.updateKey()
     this.dv.scale(0.99,0.99)
+    if (this.shotDelay > 0) {this.shotDelay--;} else if (this.shotDelay < 0) {this.shotDelay = 0;}
   }
 
   shoot() {
+    if (this.shotDelay == 0) {
     this.game.objects.push(new Shot(this.game, this));
+    this.shotDelay = this.shotDelayConfig
+  }
   }
 }
