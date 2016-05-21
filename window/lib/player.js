@@ -23,6 +23,8 @@ module.exports = class Player extends Entity {
     this.hitPlayer = 0;
     this.av.y = this.acceleration = this.game.defaults.acceleration;;
 
+    this.skin.src = "./image/player_space_ship.png";
+    this.skinOverlay.src = "./image/player_space_ship_overlay.png";
     document.addEventListener("keydown", (evt) => {
       for (let key in this.keymap) {
         if (evt.which === this.keymap[key]) {
@@ -96,12 +98,14 @@ module.exports = class Player extends Entity {
     this.updateKey()
     this.dv.scale(0.99,0.99)
     if (this.shotDelay > 0) {this.shotDelay--;} else if (this.shotDelay < 0) {this.shotDelay = 0;}
+    if(this.key.up){this.showOverlay = true} else {this.showOverlay = false}
   }
 
   shoot() {
     if (this.shotDelay == 0) {
     this.game.objects.push(new Shot(this.game, this));
     this.shotDelay = this.shotDelayConfig
+    var shootSound = new Audio("./sound/shot_sound.mp3").play()
   }
   }
 }
