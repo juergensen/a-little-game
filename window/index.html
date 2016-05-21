@@ -9,5 +9,11 @@
     <canvas id="myCanvas" width="1000" height="600">
     </canvas>
   </body>
-  <script src="game.js"></script>
+  <!--script src="game.js"></script-->
+  <script>
+    var Game = require('./lib/game.js');
+    new Game(
+      document.getElementById('myCanvas')
+    )
+  </script>
 </html>
