@@ -11,9 +11,14 @@
   </body>
   <!--script src="game.js"></script-->
   <script>
+    var canvas = document.getElementById('myCanvas')
+    window.addEventListener('resize', resizeCanvas, false);
+    function resizeCanvas () {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas()
     var Game = require('./lib/game.js');
-    new Game(
-      document.getElementById('myCanvas')
-    )
+    new Game(canvas)
   </script>
 </html>

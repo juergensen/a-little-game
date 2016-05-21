@@ -1,7 +1,7 @@
 'use strict';
 
-const Aircraft = require('./entity.js');
-
+const Entity = require('./entity.js');
+const Player = require('./player.js')
 module.exports = class Game {
   constructor(canvas) {
     this.canvas = canvas;
@@ -9,7 +9,7 @@ module.exports = class Game {
     this.objects = [];
 
     this.defaults = {
-      acceleration: 0.1,
+      acceleration: 0.2,
       angularAcceleration: 0.05,
       maxSpeed: 10,
       shotDelayConfig: 10,
@@ -21,13 +21,14 @@ module.exports = class Game {
       doDrag: true
     }
 
-    this.objects.push(new Aircraft(this));
+    this.objects.push(new Player(this, "Torge"));
 
     this.gameLoop();
   }
 
   gameLoop() {
     window.requestAnimationFrame(() => this.gameLoop());
+    this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height)
     for (var i = 0; i < this.objects.length; i++) {
       this.objects[i].update();
       this.objects[i].draw();
