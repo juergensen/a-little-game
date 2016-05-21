@@ -22,21 +22,14 @@ var npcImg = new Image(); npcImg.src = "./image/npc_space_ship.png"
 var shotImg = new Image(); shotImg.src = "./image/shot.png"
 var shotSound = new Howl({urls: ['./sound/shot_sound.mp3']})
 var npcExplosionSound = new Howl({urls: ['./sound/explosion.mp3']});
-//var playerImg = document.getElementById('playerImg')
-//var npcImg = document.getElementById('npcImg')
-//var playerImg = document.getElementById('playerImg')
-window.addEventListener('resize', resizeCanvas, false);
+
 
 function resizeCanvas() {
-        //canvas.width = window.innerWidth;
-        //canvas.height = window.innerHeight;
-
-        /**
-         * Your drawings need to be inside this function otherwise they will be reset when
-         * you resize the browser window and the canvas goes will be cleared.
-         */
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 }
 resizeCanvas();
+window.addEventListener('resize', resizeCanvas, false);
 
 
 class Player {
