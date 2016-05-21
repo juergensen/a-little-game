@@ -7,8 +7,7 @@ module.exports = class Player extends Entity {
     super(game);
     this.name = name || 'Player';
 
-    this.acceleration = this.game.default.acceleration;
-    this.angularAcceleration = this.game.default.angularAcceleration;
+    this.angularAcceleration = this.game.defaults.angularAcceleration;
 
     this.maxSpeed = this.game.defaults.maxSpeed;
 
@@ -21,6 +20,7 @@ module.exports = class Player extends Entity {
     this.shotDelay = 0;
     this.kills = 0;
     this.hitPlayer = 0;
+    this.av.y = this.acceleration = this.game.defaults.acceleration;;
 
     document.addEventListener("keydown", (evt) => {
       for (let key in this.keymap) {
@@ -65,17 +65,35 @@ module.exports = class Player extends Entity {
   }
 
 
-  goForward() {}
+  goForward() {
+    this.dv.add(this.av)
+    if (this.dv.len() > this.maxSpeed) {
+      this.dv.normalize();
+      this.dv.scale(this.maxSpeed,this.maxSpeed);
+    }
+  }
 
-  goBackward() {}
+  goBackward() {
+    this.dv.sub(this.av)
+    if (this.dv.len() > this.maxSpeed) {
+      this.dv.normalize();
+      this.dv.scale(this.maxSpeed,this.maxSpeed);
+    }
+  }
 
-  goLeft() {}
+  goLeft() {
+    this.av.rotate(-this.angularAcceleration)
+  }
 
-  goRight() {}
+  goRight() {
+
+      this.av.rotate(this.angularAcceleration)
+  }
 
   update() {
     super.update();
     this.updateKey()
+    this.dv.scale(0.99,0.99)
   }
 
   shoot() {

@@ -1,6 +1,6 @@
 'use strict';
 
-const Vector = require('sat').Vector
+const Vector = require('./vector.js')
   , EventEmitter = require('events');
 
 module.exports = class Entity extends EventEmitter {
@@ -8,7 +8,6 @@ module.exports = class Entity extends EventEmitter {
     super();
     this.game = game;
     this.pos = new Vector;
-
     this.dv = new Vector; // direction Vector
     this.av = new Vector;  // acceleration Vector Wohin das das raumschif guckt
 
