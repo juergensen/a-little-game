@@ -11,5 +11,9 @@
     "electron-prebuilt": "^0.36.0"
   },
   "author": "Momme Jürgensen <momme@juergensen.me>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "howler": "^1.1.29",
+    "peerjs": "^0.3.14"
+  }
 }
