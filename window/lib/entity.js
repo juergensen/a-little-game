@@ -1,6 +1,6 @@
 'use strict';
 
-const Vector = require('./vector.js')
+const Vector = require('sat').Vector
   , EventEmitter = require('events');
 
 module.exports = class Entity extends EventEmitter {
@@ -27,9 +27,9 @@ module.exports = class Entity extends EventEmitter {
   draw() {
     this.emit('draw');
     this.game.ctx.translate(this.pos.x, this.pos.y);
-    this.game.ctx.rotate(this.av.getRad());
+    this.game.ctx.rotate(Math.atan2(this.av.y,this.av.x));
     this.game.ctx.drawImage(this.skin, -8, -8);
-    this.game.ctx.rotate(-this.av.getRad());
+    this.game.ctx.rotate(-Math.atan2(this.av.y,this.av.x));
     this.game.ctx.translate(-this.pos.x, -this.pos.y);
   }
 }

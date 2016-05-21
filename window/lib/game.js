@@ -13,7 +13,7 @@ module.exports = class Game {
       angularAcceleration: 0.05,
       maxSpeed: 10,
       shotDelayConfig: 10,
-      shotSpeed: 5,
+      shotSpeed: 30,
       npcSpeed: 1.5,
       npcSpawnRate: 25,
       npcLimit: 10,

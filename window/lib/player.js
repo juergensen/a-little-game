@@ -1,6 +1,7 @@
 'use strict';
 
 const Entity = require('./entity.js')
+const Shot = require('./shot.js')
 
 module.exports = class Player extends Entity {
   constructor(game, name) {
@@ -97,6 +98,6 @@ module.exports = class Player extends Entity {
   }
 
   shoot() {
-
+    this.game.objects.push(new Shot(this.game, this));
   }
 }
