@@ -26,14 +26,14 @@ module.exports = class Game {
       angularAcceleration: 0.05,
       maxSpeed: 10,
       shotDelayConfig: 10,
-      shotSpeed: 15,
-      maxShotSpeed: 15,
+      shotSpeed: 30,
+      maxShotSpeed: 30,
       npcSpeed: 1.5,
       npcSpawnRate: 25,
       npcLimit: 10,
       drag: 0.99,
       doDrag: true,
-      shotAcceleration: 1
+      shotAcceleration: 2
     }
     this.pause = false
     this.objects.push(new Player(this, "Torge"));
@@ -60,7 +60,7 @@ module.exports = class Game {
           }
           if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Shot') {
             this.objects[obj2].hitpoints = 0;
-            this.objects[obj].hitpoints -= 0.1;
+            this.objects[obj].hitpoints -= 0.1*this.objects[obj2].dv.len()/this.objects[obj2].maxShotSpeed;
           }
           if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Npc') {
 
@@ -68,24 +68,28 @@ module.exports = class Game {
           if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Player') {
 
           }
+          console.log(this.objects[obj],this.objects[obj2])
           return; // Damit der nicht weiter rechnet
         }
       }
+    }
+  }
+  deleteEntity() {
+    for (let obj in this.objects) {
       if (this.objects[obj].hitpoints <= 0) {
-         this.objects.splice(obj,1)
-        //console.log("BUM");
+        this.objects.splice(obj, 1)
       }
     }
   }
-
   gameLoop() {
     window.requestAnimationFrame(() => this.gameLoop());
     if(!this.pause) {
       this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height)
-      this.checkCollision();
       for (var i = 0; i < this.objects.length; i++) {
         this.objects[i].update();
       }
+      this.checkCollision();
+      this.deleteEntity();
       for (var i = 0; i < this.objects.length; i++) {
         this.objects[i].draw();
       }

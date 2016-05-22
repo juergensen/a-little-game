@@ -26,7 +26,6 @@ module.exports = class Player extends Entity {
     this.skin = this.game.image.player
     this.skinOverlay = this.game.image.playerOverlay
     document.addEventListener("keydown", (evt) => {
-      console.log(evt.which);
       for (let key in this.keymap) {
         if (evt.which === this.keymap[key]) {
           this.key[key] = true;
