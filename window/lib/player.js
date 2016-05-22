@@ -23,9 +23,10 @@ module.exports = class Player extends Entity {
     this.hitPlayer = 0;
     this.av.y = this.acceleration = this.game.defaults.acceleration;;
 
-    this.skin.src = "./image/player_space_ship.png";
-    this.skinOverlay.src = "./image/player_space_ship_overlay.png";
+    this.skin = this.game.image.player
+    this.skinOverlay = this.game.image.playerOverlay
     document.addEventListener("keydown", (evt) => {
+      console.log(evt.which);
       for (let key in this.keymap) {
         if (evt.which === this.keymap[key]) {
           this.key[key] = true;
@@ -110,7 +111,7 @@ module.exports = class Player extends Entity {
     this.game.ctx.lineWidth="4";
     this.game.ctx.strokeStyle="green";
     this.game.ctx.moveTo(-TextWidth/2,-14);
-    this.game.ctx.lineTo((-TextWidth/2) + this.hitpoins*TextWidth,-14);
+    this.game.ctx.lineTo((-TextWidth/2) + this.hitpoints*TextWidth,-14);
     this.game.ctx.stroke();
     this.game.ctx.translate(-this.pos.x, -this.pos.y);
   }

@@ -9,13 +9,11 @@ module.exports = class Entity {
     this.pos = new Vector(50,Math.random()*this.game.canvas.height);
     this.dv = new Vector(0,0); // direction Vector
     this.av = new Vector(0,1);  // acceleration Vector Wohin das das raumschif guckt
-    this.hitpoins = 1;
-    this.delete = false;
+    this.hitpoints = 1;
 
-    this.skin = new Image();
-    this.skinOverlay = new Image();
+    this.skin = this.game.image.err
+    this.skinOverlay = null
     this.showOverlay = false;
-    this.skin.src = "./image/player_space_ship.png";
 
     this.hitbox = new Poly(this.pos, [
       new Vector(this.pos.x-this.skin.width/2,this.pos.y-this.skin.height/2),
@@ -44,6 +42,8 @@ module.exports = class Entity {
 
   }
   draw() {
+    this.game.ctx.lineWidth="1";
+    this.game.ctx.strokeStyle="black";
     this.game.ctx.beginPath();
     this.game.ctx.moveTo(this.hitbox.calcPoints[0].x,this.hitbox.calcPoints[0].y);
     for (var i = 1; i < this.hitbox.calcPoints.length; i++) {
