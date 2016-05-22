@@ -9,8 +9,10 @@ module.exports = class Entity {
     this.pos = new Vector(50,Math.random()*this.game.canvas.height);
     this.dv = new Vector(0,0); // direction Vector
     this.av = new Vector(0,1);  // acceleration Vector Wohin das das raumschif guckt
+<<<<<<< HEAD
     this.hitpoins = 1;
     this.delete = false;
+>>>>>>> 2e07c22f09459a44fac8dbb04dc0346f1c9d3305
 
     this.skin = new Image();
     this.skinOverlay = new Image();
