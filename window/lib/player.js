@@ -103,9 +103,9 @@ module.exports = class Player extends Entity {
 
   shoot() {
     if (this.shotDelay == 0) {
-    this.game.objects.push(new Shot(this.game, this));
-    this.shotDelay = this.shotDelayConfig
-    var shootSound = new Audio("./sound/shot_sound.mp3").play()
-  }
+      this.game.objects.push(new Shot(this.game, this));
+      this.shotDelay = this.shotDelayConfig
+      new Audio("./sound/shot_sound.mp3").play()
+    }
   }
 }

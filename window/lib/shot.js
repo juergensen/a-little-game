@@ -11,7 +11,7 @@ module.exports = class Shot extends Entity {
     this.shotSpeed = this.game.defaults.shotSpeed;
     this.shotAcceleration = this.game.defaults.shotAcceleration;
     this.maxShotSpeed = this.game.defaults.maxShotSpeed;
-    this.pos = this.player.pos.clone()
+    this.pos = this.player.pos.clone().add(this.player.av.clone().normalize().scale(16,16))
     this.dv = this.player.av.clone()
     this.dv.scale(this.shotSpeed,this.shotSpeed)
     this.dv.add(this.player.dv.clone())
