@@ -11,7 +11,7 @@ module.exports = class Entity extends EventEmitter {
     this.dv = new Vector(0,0); // direction Vector
     this.av = new Vector(0,1);  // acceleration Vector Wohin das das raumschif guckt
 
-    this.hitpoins = 1;
+    this.hitpoins = 0.5;
 
     this.skin = new Image();
     this.skinOverlay = new Image();

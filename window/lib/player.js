@@ -101,6 +101,20 @@ module.exports = class Player extends Entity {
     if(this.key.up){this.showOverlay = true} else {this.showOverlay = false}
   }
 
+  draw() {
+    super.draw();
+    let TextWidth = this.game.ctx.measureText(this.name).width;
+    this.game.ctx.translate(this.pos.x, this.pos.y);
+    this.game.ctx.fillText(this.name,-TextWidth/2,-17)
+    this.game.ctx.beginPath();
+    this.game.ctx.lineWidth="4";
+    this.game.ctx.strokeStyle="green";
+    this.game.ctx.moveTo(-TextWidth/2,-14);
+    this.game.ctx.lineTo((-TextWidth/2) + this.hitpoins*TextWidth,-14);
+    this.game.ctx.stroke();
+    this.game.ctx.translate(-this.pos.x, -this.pos.y);
+  }
+
   shoot() {
     if (this.shotDelay == 0) {
     this.game.objects.push(new Shot(this.game, this));
