@@ -4,6 +4,7 @@ const SAT = require('sat')
 const Entity = require('./entity.js');
 const Player = require('./player.js')
 const Camera = require('./camera.js')
+const Response = SAT.Response
 
 module.exports = class Game {
   constructor(canvas) {
@@ -38,15 +39,16 @@ module.exports = class Game {
       npcLimit: 10,
       drag: 0.99,
       doDrag: true,
-      shotAcceleration: 2,
-      showHitbox: false
+      shotAcceleration: 2
     }
     this.pause = false
     this.objects.push(new Player(this, "Torge"));
     this.camera = new Camera(this)
     this.camera.follow(this.objects[0])
-    // this.objects.push(new Player(this, "supermomme"));
-    // this.objects[1].keymap = {up:38,left:37,down:40,right:39,shoot:96};
+    this.objects.push(new Player(this, "supermomme"));
+    this.objects[1].keymap = {up:38,left:37,down:40,right:39,shoot:96};
+    this.objects[1].pos.y += 50
+    this.response = new Response()
     this.drawGrid();
     this.gameLoop();
   }
@@ -54,7 +56,7 @@ module.exports = class Game {
   checkCollision() {
     for(let obj in this.objects) {
       for(let obj2 in this.objects) {
-        if(this.objects[obj] != this.objects[obj2] && SAT.testPolygonPolygon(this.objects[obj].hitbox, this.objects[obj2].hitbox)) {
+        if(this.objects[obj] != this.objects[obj2] && SAT.testPolygonPolygon(this.objects[obj].hitbox, this.objects[obj2].hitbox, this.response)) {
           if (this.objects[obj].constructor.name == 'Shot' && this.objects[obj2].constructor.name == 'Shot') {
               this.objects[obj].hitpoints = 0;
               this.objects[obj2].hitpoints = 0;
@@ -67,16 +69,20 @@ module.exports = class Game {
 
           }
           if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Shot') {
+            this.response.clear();
             this.objects[obj2].hitpoints = 0;
             this.objects[obj].hitpoints -= 0.1*this.objects[obj2].dv.len()/this.objects[obj2].maxShotSpeed;
+            this.objects[obj].dv.add(this.objects[obj2].dv.scale(0.1,0.1));
           }
           if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Npc') {
 
           }
           if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Player') {
-
+            this.response.clear()
+            this.objects[obj].dv.sub(this.response.overlapV.scale(0.5,0.5));
+            this.objects[obj2].dv.add(this.response.overlapV.scale(0.5,0.5))
+            console.log(this.response)
           }
-          console.log(this.objects[obj],this.objects[obj2])
           return; // Damit der nicht weiter rechnet
         }
       }

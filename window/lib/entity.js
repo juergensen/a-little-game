@@ -16,10 +16,10 @@ module.exports = class Entity {
     this.showOverlay = false;
 
     this.hitbox = new Poly(this.pos, [
-      new Vector(this.pos.x-this.skin.width/2,this.pos.y-this.skin.height/2),
-      new Vector(this.pos.x+this.skin.width/2,this.pos.y-this.skin.height/2),
-      new Vector(this.pos.x+this.skin.width/2,this.pos.y+this.skin.height/2),
-      new Vector(this.pos.x-this.skin.width/2,this.pos.y+this.skin.height/2)
+      new Vector(this.pos.x-this.skin.width,this.pos.y-this.skin.height),
+      new Vector(this.pos.x+this.skin.width,this.pos.y-this.skin.height),
+      new Vector(this.pos.x+this.skin.width,this.pos.y+this.skin.height),
+      new Vector(this.pos.x-this.skin.width,this.pos.y+this.skin.height)
     ]);
   }
 
@@ -27,32 +27,23 @@ module.exports = class Entity {
     this.pos.add(this.dv);
     this.hitbox.pos = this.pos;
     this.hitbox.setPoints([
-      new Vector(this.pos.x-this.skin.width/2,this.pos.y-this.skin.height/2),
-      new Vector(this.pos.x+this.skin.width/2,this.pos.y-this.skin.height/2),
-      new Vector(this.pos.x+this.skin.width/2,this.pos.y+this.skin.height/2),
-      new Vector(this.pos.x-this.skin.width/2,this.pos.y+this.skin.height/2)
+      new Vector(this.pos.x-this.skin.width,this.pos.y-this.skin.height),
+      new Vector(this.pos.x+this.skin.width,this.pos.y-this.skin.height),
+      new Vector(this.pos.x+this.skin.width,this.pos.y+this.skin.height),
+      new Vector(this.pos.x-this.skin.width,this.pos.y+this.skin.height)
     ]);
     this.hitbox.translate(-this.pos.x, -this.pos.y)
     this.hitbox.rotate(Math.atan2(this.av.y,this.av.x));
     this.hitbox.translate(this.pos.x, this.pos.y)
-    if (this.pos.x < 0) {/*this.pos.x = 0*/ this.dv.x *= -1;this.av.x *= -1 }
-    if (this.pos.y < 0) {/*this.pos.y = 0*/ this.dv.y *= -1;this.av.y *= -1 }
-    if (this.pos.y > this.game.canvas.height) {/*this.pos.y = this.game.canvas.height*/ this.dv.y *= -1;this.av.y *= -1 }
-    if (this.pos.x > this.game.canvas.width) {/*this.pos.x = this.game.canvas.width*/ this.dv.x *= -1;this.av.x *= -1 }
+    if (this.pos.x < 0) {this.pos.x = 0; this.dv.x *= -1;this.av.x *= -1 }
+    if (this.pos.y < 0) {this.pos.y = 0; this.dv.y *= -1;this.av.y *= -1 }
+    if (this.pos.y > this.game.canvas.height) {this.pos.y = this.game.canvas.height; this.dv.y *= -1;this.av.y *= -1 }
+    if (this.pos.x > this.game.canvas.width) {this.pos.x = this.game.canvas.width; this.dv.x *= -1;this.av.x *= -1 }
 
   }
   draw() {
     this.game.ctx.lineWidth="1";
     this.game.ctx.strokeStyle="black";
-    if(this.game.defaults.showHitbox) {
-      this.game.ctx.beginPath();
-      this.game.ctx.moveTo(this.hitbox.calcPoints[0].x,this.hitbox.calcPoints[0].y);
-      for (var i = 1; i < this.hitbox.calcPoints.length; i++) {
-        this.game.ctx.lineTo(this.hitbox.calcPoints[i].x,this.hitbox.calcPoints[i].y)
-      }
-      this.game.ctx.closePath();
-      this.game.ctx.stroke();
-    };
     this.game.ctx.translate(this.pos.x, this.pos.y);
     this.game.ctx.rotate(Math.atan2(this.av.y,this.av.x));
     this.game.ctx.drawImage(this.skin, -this.skin.width/2, -this.skin.height/2);
