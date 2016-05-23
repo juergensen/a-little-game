@@ -6,7 +6,7 @@ const Vector = SAT.Vector;
 module.exports = class Entity {
   constructor(game) {
     this.game = game;
-    this.pos = new Vector(50,Math.random()*this.game.canvas.height);
+    this.pos = new Vector(50,50);
     this.dv = new Vector(0,0); // direction Vector
     this.av = new Vector(0,1);  // acceleration Vector Wohin das das raumschif guckt
     this.hitpoints = 1;
@@ -44,13 +44,15 @@ module.exports = class Entity {
   draw() {
     this.game.ctx.lineWidth="1";
     this.game.ctx.strokeStyle="black";
-    this.game.ctx.beginPath();
-    this.game.ctx.moveTo(this.hitbox.calcPoints[0].x,this.hitbox.calcPoints[0].y);
-    for (var i = 1; i < this.hitbox.calcPoints.length; i++) {
-      this.game.ctx.lineTo(this.hitbox.calcPoints[i].x,this.hitbox.calcPoints[i].y)
-    }
-    this.game.ctx.closePath();
-    this.game.ctx.stroke()
+    if(this.game.defaults.showHitbox) {
+      this.game.ctx.beginPath();
+      this.game.ctx.moveTo(this.hitbox.calcPoints[0].x,this.hitbox.calcPoints[0].y);
+      for (var i = 1; i < this.hitbox.calcPoints.length; i++) {
+        this.game.ctx.lineTo(this.hitbox.calcPoints[i].x,this.hitbox.calcPoints[i].y)
+      }
+      this.game.ctx.closePath();
+      this.game.ctx.stroke();
+    };
     this.game.ctx.translate(this.pos.x, this.pos.y);
     this.game.ctx.rotate(Math.atan2(this.av.y,this.av.x));
     this.game.ctx.drawImage(this.skin, -this.skin.width/2, -this.skin.height/2);
