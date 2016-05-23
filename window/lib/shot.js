@@ -3,7 +3,7 @@
 const Entity = require('./entity.js')
 
 module.exports = class Shot extends Entity {
-  constructor(game, player) {
+  constructor(game, player,lr) {
     super(game);
 
     this.player = player
@@ -11,7 +11,8 @@ module.exports = class Shot extends Entity {
     this.shotSpeed = this.game.defaults.shotSpeed;
     this.shotAcceleration = this.game.defaults.shotAcceleration;
     this.maxShotSpeed = this.game.defaults.maxShotSpeed;
-    this.pos = this.player.pos.clone().add(this.player.av.clone().normalize().scale(20,20))
+    this.pos = this.player.pos.clone().add(this.player.av.clone().normalize().scale(32,32))
+    this.pos.add(this.player.av.clone().perp().normalize().scale(lr*8,lr*8))
     this.dv = this.player.av.clone()
     this.dv.scale(this.shotSpeed,this.shotSpeed)
     this.dv.add(this.player.dv.clone())

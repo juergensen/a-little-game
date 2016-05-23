@@ -22,6 +22,7 @@ module.exports = class Player extends Entity {
     this.kills = 0;
     this.hitPlayer = 0;
     this.av.y = this.acceleration = this.game.defaults.acceleration;;
+    this.lr = 1
 
     this.skin = this.game.image.player
     this.skinOverlay = this.game.image.playerOverlay
@@ -117,7 +118,8 @@ module.exports = class Player extends Entity {
 
   shoot() {
     if (this.shotDelay == 0) {
-      this.game.objects.push(new Shot(this.game, this));
+      this.lr *= -1
+      this.game.objects.push(new Shot(this.game, this, this.lr));
       this.shotDelay = this.shotDelayConfig
       new Audio("./sound/shot_sound.mp3").play()
     }

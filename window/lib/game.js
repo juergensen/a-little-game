@@ -91,6 +91,9 @@ module.exports = class Game {
   deleteEntity() {
     for (let obj in this.objects) {
       if (this.objects[obj].hitpoints <= 0) {
+        if(this.objects[obj].constructor.name == 'Player' || this.objects[obj].constructor.name == 'Npc') {
+          new Audio("./sound/explosion.mp3").play()
+        }
         this.objects.splice(obj, 1)
       }
     }
