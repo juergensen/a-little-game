@@ -99,24 +99,27 @@ module.exports = class Game {
     }
   }
   drawGrid() {
-    for (var x = 0; x <= this.canvas.width; x += 60) {
-      this.ctx.moveTo(0.5 + x, 0);
-      this.ctx.lineTo(0.5 + x, this.canvas.height);
+    this.backgroundCanvas = document.createElement('canvas');
+    this.backgroundCanvas.width = this.canvas.width
+    this.backgroundCanvas.height = this.canvas.height
+    this.backgroundCtx = this.backgroundCanvas.getContext("2d");
+    for (var x = 0; x <= this.backgroundCanvas.width; x += 60) {
+      this.backgroundCtx.moveTo(0.5 + x, 0);
+      this.backgroundCtx.lineTo(0.5 + x, this.backgroundCanvas.height);
     }
-    for (var x = 0; x <= this.canvas.height; x += 60) {
-      this.ctx.moveTo(0, 0.5 + x);
-      this.ctx.lineTo(this.canvas.width, 0.5 + x);
+    for (var x = 0; x <= this.backgroundCanvas.height; x += 60) {
+      this.backgroundCtx.moveTo(0, 0.5 + x);
+      this.backgroundCtx.lineTo(this.backgroundCanvas.width, 0.5 + x);
     }
-    this.ctx.strokeStyle = "black";
-    this.ctx.stroke();
-    this.image.grid = new Image();
-    this.image.grid.src = this.ctx.canvas.toDataURL("image/png");
+    this.backgroundCtx.strokeStyle = "black";
+    this.backgroundCtx.stroke();
+
   }
   gameLoop() {
     window.requestAnimationFrame(() => this.gameLoop());
     if(!this.pause) {
-      this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
-      this.ctx.drawImage(this.image.grid,0,0)
+      this.ctx.clearRect(this.camera.pos.x-50,this.camera.pos.y-50,this.canvasCam.width+100, this.canvasCam.height+100);
+      this.ctx.drawImage(this.backgroundCanvas,this.camera.pos.x,this.camera.pos.y,this.camera.viewPortRect.w,this.camera.viewPortRect.h,this.camera.pos.x,this.camera.pos.y,this.canvasCam.width,this.canvasCam.height)
       for (var i = 0; i < this.objects.length; i++) {
         this.objects[i].update();
       }
