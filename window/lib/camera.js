@@ -7,26 +7,25 @@ module.exports = class Camera {
         this.game = game;
         this.pos = new Vector();
         this.deadZone = new Vector();
-        this.viewWidth = this.game.canvasCam.width;
-        this.viewHeight = this.game.canvasCam.height;
         this.followed = null;
-        this.viewPortRect = new Box(this.pos, this.viewWidth, this.viewHeight)
+        this.viewPortRect = new Box(this.pos, this.game.canvasCam.width, this.game.canvasCam.height)
     }
 
     follow(gameObject) {
         this.followed = gameObject;
     }
     update() {
+      this.viewPortRect = new Box(this.pos, this.game.canvasCam.width, this.game.canvasCam.height)
         if (this.followed != null) {
-            if (this.followed.pos.x - this.pos.x + this.viewWidth / 2 > this.viewWidth) {
-                this.pos.x = this.followed.pos.x - (this.viewWidth - this.viewWidth / 2)
-            } else if (this.followed.pos.x - this.viewWidth / 2 < this.pos.x) {
-                this.pos.x = this.followed.pos.x - this.viewWidth / 2
+            if (this.followed.pos.x - this.pos.x + this.game.canvasCam.width / 2 > this.game.canvasCam.width) {
+                this.pos.x = this.followed.pos.x - (this.game.canvasCam.width - this.game.canvasCam.width / 2)
+            } else if (this.followed.pos.x - this.game.canvasCam.width / 2 < this.pos.x) {
+                this.pos.x = this.followed.pos.x - this.game.canvasCam.width / 2
             };
-            if (this.followed.pos.y - this.pos.y + this.viewHeight / 2 > this.viewHeight) {
-                this.pos.y = this.followed.pos.y - (this.viewHeight - this.viewHeight / 2)
-            } else if (this.followed.pos.y - this.viewHeight / 2 < this.pos.y) {
-                this.pos.y = this.followed.pos.y - this.viewHeight / 2
+            if (this.followed.pos.y - this.pos.y + this.game.canvasCam.height / 2 > this.game.canvasCam.height) {
+                this.pos.y = this.followed.pos.y - (this.game.canvasCam.height - this.game.canvasCam.height / 2)
+            } else if (this.followed.pos.y - this.game.canvasCam.height / 2 < this.pos.y) {
+                this.pos.y = this.followed.pos.y - this.game.canvasCam.height / 2
             };
         }
         this.viewPortRect.pos = this.pos
@@ -36,11 +35,11 @@ module.exports = class Camera {
         if (this.pos.y < 0) {
             this.pos.y = 0
         }
-        if (this.pos.y > this.game.canvas.height - this.viewHeight) {
-            this.pos.y = this.game.canvas.height - this.viewHeight
+        if (this.pos.y > this.game.canvas.height - this.game.canvasCam.height) {
+            this.pos.y = this.game.canvas.height - this.game.canvasCam.height
         }
-        if (this.pos.x > this.game.canvas.width - this.viewWidth) {
-            this.pos.x = this.game.canvas.width - this.viewWidth
+        if (this.pos.x > this.game.canvas.width - this.game.canvasCam.width) {
+            this.pos.x = this.game.canvas.width - this.game.canvasCam.width
         }
     }
 }
