@@ -17,17 +17,21 @@ module.exports = class Debri extends Entity {
             case 1:
                 this.skin = this.game.image.playerDebri1
                 this.pos.sub(this.av.clone().perp().scale(11,11))
-                this.pos.sub(this.dv.clone().normalize().scale(8,8))
+                this.pos.sub(this.av.clone().normalize().scale(8,8))
                 this.dv.sub(this.av.clone().perp().scale(2,2))
                 break;
             case 2:
                 this.skin = this.game.image.playerDebri2
                 this.pos.add(this.av.clone().perp().scale(11,11))
-                this.pos.sub(this.dv.clone().normalize().scale(8,8))
+                this.pos.sub(this.av.clone().normalize().scale(8,8))
                 this.dv.add(this.av.clone().perp().scale(2,2))
                 break;
             default:
 
         }
+    }
+    update() {
+      super.update();
+      if(this.dv.len() <= 0.1){this.hitpoints = 0}
     }
 }

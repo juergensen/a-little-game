@@ -75,11 +75,9 @@ checkCollision() {
                 if ((this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Shot' && this.objects[obj2].playerProtection <= 0) ||
                     (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Shot') ||
                     (this.objects[obj].constructor.name == 'Debri' && this.objects[obj2].constructor.name == 'Shot')) {
-                    this.response.clear();
                     this.objects[obj2].hitpoints = 0;
                     this.objects[obj].hitpoints -= 0.01 * this.objects[obj2].dv.sub(this.objects[obj].dv).len();
                     this.objects[obj].dv.add(this.objects[obj2].dv.scale(0.1, 0.1));
-                    console.log("Bum")
                 }
                 if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Npc') {
 
@@ -91,8 +89,8 @@ checkCollision() {
                     this.objects[obj2].dv.add(this.response.overlapV.clone().scale(0.5, 0.5))
                 }
                 if ((this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Debri')) {
-                  this.objects[obj2].dv.add(this.response.overlapV.clone())
-                  console.log("blub")
+                    this.objects[obj].dv.sub(this.response.overlapV.clone().scale(0.1, 0.1));
+                    this.objects[obj2].dv.add(this.response.overlapV.clone().scale(0.9, 0.9))
                 }
                 return; // Damit der nicht weiter rechnet
             }
