@@ -106,6 +106,7 @@ module.exports = class Player extends Entity {
     super.draw();
     let TextWidth = this.game.ctx.measureText(this.name).width;
     this.game.ctx.translate(this.pos.x, this.pos.y);
+    this.game.ctx.fillStyle = 'white';
     this.game.ctx.fillText(this.name,-TextWidth/2,-17)
     this.game.ctx.beginPath();
     this.game.ctx.lineWidth="4";
