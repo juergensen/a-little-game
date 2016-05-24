@@ -3,6 +3,7 @@
 const SAT = require('sat')
 const Entity = require('./entity.js');
 const Player = require('./player.js')
+const Debri = require('./debri.js')
 const Camera = require('./camera.js')
 const Response = SAT.Response
 const Vector = SAT.Vector
@@ -21,13 +22,19 @@ module.exports = class Game {
       playerOverlay:new Image(),
       npc:new Image(),
       shot:new Image(),
-      err:new Image()
+      err:new Image(),
+      playerDebri0: new Image(),
+      playerDebri1: new Image(),
+      playerDebri2: new Image()
     }
     this.image.player.src = "./image/player_space_ship.png";
     this.image.playerOverlay.src = "./image/player_space_ship_overlay.png";
     this.image.npc.src = "./image/npc_space_ship.png";
     this.image.shot.src = "./image/shot.png";
     this.image.err.src = "./image/player_space_ship.png";
+    this.image.playerDebri0.src = './image/player_debri_0.png'
+    this.image.playerDebri1.src = './image/player_debri_1.png'
+    this.image.playerDebri2.src = './image/player_debri_2.png'
     this.defaults = {
       acceleration: 0.2,
       angularAcceleration: 0.05,
@@ -53,47 +60,53 @@ module.exports = class Game {
     this.drawGrid();
     this.gameLoop();
   }
+checkCollision() {
+    for (let obj in this.objects) {
+        for (let obj2 in this.objects) {
+          this.response.clear()
+            if (this.objects[obj] != this.objects[obj2] && SAT.testPolygonPolygon(this.objects[obj].hitbox, this.objects[obj2].hitbox, this.response)) {
+                if (this.objects[obj].constructor.name == 'Shot' && this.objects[obj2].constructor.name == 'Shot') {
+                    this.objects[obj].hitpoints = 0;
+                    this.objects[obj2].hitpoints = 0;
+                }
+                if (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Npc') {
 
-  checkCollision() {
-    for(let obj in this.objects) {
-      for(let obj2 in this.objects) {
-        if(this.objects[obj] != this.objects[obj2] && SAT.testPolygonPolygon(this.objects[obj].hitbox, this.objects[obj2].hitbox, this.response)) {
-          if (this.objects[obj].constructor.name == 'Shot' && this.objects[obj2].constructor.name == 'Shot') {
-              this.objects[obj].hitpoints = 0;
-              this.objects[obj2].hitpoints = 0;
-          }
-          if (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Shot') {
-            this.objects[obj2].hitpoints = 0;
-            this.objects[obj].hitpoints -= 0.25;
-          }
-          if (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Npc') {
+                }
+                if ((this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Shot' && this.objects[obj2].playerProtection <= 0) ||
+                    (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Shot') ||
+                    (this.objects[obj].constructor.name == 'Debri' && this.objects[obj2].constructor.name == 'Shot')) {
+                    this.response.clear();
+                    this.objects[obj2].hitpoints = 0;
+                    this.objects[obj].hitpoints -= 0.01 * this.objects[obj2].dv.sub(this.objects[obj].dv).len();
+                    this.objects[obj].dv.add(this.objects[obj2].dv.scale(0.1, 0.1));
+                    console.log("Bum")
+                }
+                if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Npc') {
 
-          }
-          if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Shot'&& this.objects[obj2].playerProtection <= 0) {
-            this.response.clear();
-            this.objects[obj2].hitpoints = 0;
-            this.objects[obj].hitpoints -= 0.01*this.objects[obj2].dv.sub(this.objects[obj].dv).len();
-            this.objects[obj].dv.add(this.objects[obj2].dv.scale(0.1,0.1));
-            console.log("Bum")
-          }
-          if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Npc') {
-
-          }
-          if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Player') {
-            this.response.clear()
-            this.objects[obj].dv.sub(this.response.overlapV.clone().scale(0.5,0.5));
-            this.objects[obj2].dv.add(this.response.overlapV.clone().scale(0.5,0.5))
-          }
-          return; // Damit der nicht weiter rechnet
+                }
+                if ((this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Player') ||
+                    (this.objects[obj].constructor.name == 'Debri' && this.objects[obj2].constructor.name == 'Debri')) {
+                    this.response.clear()
+                    this.objects[obj].dv.sub(this.response.overlapV.clone().scale(0.5, 0.5));
+                    this.objects[obj2].dv.add(this.response.overlapV.clone().scale(0.5, 0.5))
+                }
+                if ((this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Debri')) {
+                  this.objects[obj2].dv.add(this.response.overlapV.clone())
+                  console.log("blub")
+                }
+                return; // Damit der nicht weiter rechnet
+            }
         }
-      }
     }
-  }
+}
   deleteEntity() {
     for (let obj in this.objects) {
       if (this.objects[obj].hitpoints <= 0) {
         if(this.objects[obj].constructor.name == 'Player' || this.objects[obj].constructor.name == 'Npc') {
           new Audio("./sound/explosion.mp3").play()
+          this.objects.push(new Debri(this, this.objects[obj], 0));
+          this.objects.push(new Debri(this, this.objects[obj], 1));
+          this.objects.push(new Debri(this, this.objects[obj], 2));
         }
         this.objects.splice(obj, 1)
       }

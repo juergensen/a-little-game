@@ -32,7 +32,6 @@ module.exports = class Shot extends Entity {
     super.update();
     this.accelerate();
     this.av.scale(0.99,0.99)
-    this.dv.scale(0.99,0.99)
     if(this.dv.len() <= 0.1 && this.av.len() <= 0.1){this.hitpoints = 0}
   }
 

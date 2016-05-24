@@ -97,7 +97,6 @@ module.exports = class Player extends Entity {
   update() {
     super.update();
     this.updateKey()
-    this.dv.scale(0.99,0.99)
     if (this.shotDelay > 0) {this.shotDelay--;} else if (this.shotDelay < 0) {this.shotDelay = 0;}
     if(this.key.up){this.showOverlay = true} else {this.showOverlay = false}
   }
