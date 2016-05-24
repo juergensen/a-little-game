@@ -114,30 +114,26 @@ module.exports = class Game {
     this.stars = 1000
     this.starSpawnrate = 0.5
     for (var i = 0; i < this.stars; i++) {
-      if (Math.round(Math.random()*this.starSpawnrate) == 0) {
-        var star = {
-          pos:new Vector(Math.random()*this.backgroundCanvas.width,Math.random()*this.backgroundCanvas.height),
-          radius:10
-        }
-        var grd = this.backgroundCtx.createRadialGradient(star.pos.x, star.pos.y, 1, star.pos.x, star.pos.y, star.radius);
-        grd.addColorStop(0, "white");
-        grd.addColorStop(1, "transparent");
-        this.backgroundCtx.fillStyle = grd;
-        this.backgroundCtx.fillRect(star.pos.x-star.radius, star.pos.y-star.radius, star.radius*2, star.radius*2);
+      var star = {
+        pos:new Vector(Math.random()*this.backgroundCanvas.width,Math.random()*this.backgroundCanvas.height),
+        radius:10
       }
+      var grd = this.backgroundCtx.createRadialGradient(star.pos.x, star.pos.y, 1, star.pos.x, star.pos.y, star.radius);
+      grd.addColorStop(0, "white");
+      grd.addColorStop(1, "transparent");
+      this.backgroundCtx.fillStyle = grd;
+      this.backgroundCtx.fillRect(star.pos.x-star.radius, star.pos.y-star.radius, star.radius*2, star.radius*2);
     }
     for (var i = 0; i < this.stars; i++) {
-      if (Math.round(Math.random()*this.starSpawnrate) == 0) {
-        var star = {
-          pos:new Vector(Math.random()*this.parallaxCanvas.width,Math.random()*this.parallaxCanvas.height),
-          radius:10
-        }
-        var grd = this.parallaxCtx.createRadialGradient(star.pos.x, star.pos.y, 1, star.pos.x, star.pos.y, star.radius);
-        grd.addColorStop(0, "white");
-        grd.addColorStop(1, "transparent");
-        this.parallaxCtx.fillStyle = grd;
-        this.parallaxCtx.fillRect(star.pos.x-star.radius, star.pos.y-star.radius, star.radius*2, star.radius*2);
+      var star = {
+        pos:new Vector(Math.random()*this.parallaxCanvas.width,Math.random()*this.parallaxCanvas.height),
+        radius:10
       }
+      var grd = this.parallaxCtx.createRadialGradient(star.pos.x, star.pos.y, 1, star.pos.x, star.pos.y, star.radius);
+      grd.addColorStop(0, "white");
+      grd.addColorStop(1, "transparent");
+      this.parallaxCtx.fillStyle = grd;
+      this.parallaxCtx.fillRect(star.pos.x-star.radius, star.pos.y-star.radius, star.radius*2, star.radius*2);
     }
 
   }
@@ -145,7 +141,7 @@ module.exports = class Game {
     window.requestAnimationFrame(() => this.gameLoop());
     if(!this.pause) {
       this.ctx.clearRect(this.camera.pos.x-50,this.camera.pos.y-50,this.canvasCam.width+100, this.canvasCam.height+100);
-      this.ctx.drawImage(this.parallaxCanvas,this.camera.pos.x/1.15,this.camera.pos.y/1.15,this.camera.viewPortRect.w,this.camera.viewPortRect.h,this.camera.pos.x,this.camera.pos.y,this.canvasCam.width,this.canvasCam.height)
+      this.ctx.drawImage(this.parallaxCanvas,this.camera.pos.x/1.15,this.camera.pos.y/1.15,this.camera.viewPortRect.w,this.camera.viewPortRect.h,this.camera.pos.x-50,this.camera.pos.y-50,this.canvasCam.width+100,this.canvasCam.height+100)
       this.ctx.drawImage(this.backgroundCanvas,this.camera.pos.x,this.camera.pos.y,this.camera.viewPortRect.w,this.camera.viewPortRect.h,this.camera.pos.x,this.camera.pos.y,this.canvasCam.width,this.canvasCam.height)
       for (var i = 0; i < this.objects.length; i++) {
         this.objects[i].update();
