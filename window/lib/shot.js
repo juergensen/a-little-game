@@ -17,7 +17,7 @@ module.exports = class Shot extends Entity {
     this.dv.scale(this.shotSpeed,this.shotSpeed)
     this.dv.add(this.player.dv.clone())
     this.av = this.player.av.clone().scale(this.shotAcceleration, this.shotAcceleration)
-    this.playerProtection = 4;
+    this.playerProtection = 5;
     this.skin = this.game.image.shot
 
   }

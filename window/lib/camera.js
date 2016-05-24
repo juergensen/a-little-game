@@ -56,27 +56,27 @@ module.exports = class Camera {
             compassPos.x*=-this.viewPortRect.h/(2*compassPos.y)
             compassPos.add(new Vector(this.viewPortRect.w/2,this.viewPortRect.h/2))
             compassPos.y = 15
-            if(compassPos.x > this.viewPortRect.w-5+TextWidth/2){compassPos.x = this.viewPortRect.w-5+TextWidth/2}
+            if(compassPos.x > this.viewPortRect.w-(5+TextWidth/2)){compassPos.x = this.viewPortRect.w-(5+TextWidth/2)}
             if(compassPos.x < 5+TextWidth/2){compassPos.x = 5+TextWidth/2}
           }
           if (or < Math.atan2(path.y,path.x) && Math.atan2(path.y,path.x) < ur) {
             compassPos.x*=this.viewPortRect.w/(2*compassPos.x)
             compassPos.add(new Vector(this.viewPortRect.w/2,this.viewPortRect.h/2))
-            compassPos.x = this.viewPortRect.w-5+TextWidth/2
+            compassPos.x = this.viewPortRect.w-(5+TextWidth/2)
             if(compassPos.y > this.viewPortRect.h-15){compassPos.y = this.viewPortRect.h-15}
             if(compassPos.y < 15){compassPos.y = 15}
           }
           if (ur < Math.atan2(path.y,path.x) && Math.atan2(path.y,path.x) < ul) {
             compassPos.x*=this.viewPortRect.h/(2*compassPos.y)
             compassPos.add(new Vector(this.viewPortRect.w/2,this.viewPortRect.h/2))
-            compassPos.y = this.viewPortRect.h-15
-            if(compassPos.x > this.viewPortRect.w-5+TextWidth/2){compassPos.x = this.viewPortRect.w-5+TextWidth/2}
-            if(compassPos.x < 5+TextWidth/2){compassPos.x = 5+TextWidth/2}
+            compassPos.y = this.viewPortRect.h-25
+            if(compassPos.x > this.viewPortRect.w-(5+TextWidth/2)){compassPos.x = this.viewPortRect.w-(5+TextWidth/2)}
+            if(compassPos.x < (5+TextWidth/2)){compassPos.x = (5+TextWidth/2)}
           }
           if (ul < Math.atan2(path.y,path.x) || Math.atan2(path.y,path.x) < ol) {
             compassPos.x*=-this.viewPortRect.w/(2*compassPos.x)
             compassPos.add(new Vector(this.viewPortRect.w/2,this.viewPortRect.h/2))
-            compassPos.x = 5+TextWidth/2
+            compassPos.x = (5+TextWidth/2)
             if(compassPos.y > this.viewPortRect.h){compassPos.y = this.viewPortRect.h-15}
             if(compassPos.y < 15){compassPos.y = 15}
           }

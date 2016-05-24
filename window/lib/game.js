@@ -80,8 +80,8 @@ module.exports = class Game {
           }
           if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Player') {
             this.response.clear()
-            this.objects[obj].dv.sub(this.response.overlapV.scale(0.5,0.5));
-            this.objects[obj2].dv.add(this.response.overlapV.scale(0.5,0.5))
+            this.objects[obj].dv.sub(this.response.overlapV.clone().scale(0.5,0.5));
+            this.objects[obj2].dv.add(this.response.overlapV.clone().scale(0.5,0.5))
           }
           return; // Damit der nicht weiter rechnet
         }
