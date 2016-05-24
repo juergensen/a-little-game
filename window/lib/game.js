@@ -64,7 +64,7 @@ checkCollision() {
     for (let obj in this.objects) {
         for (let obj2 in this.objects) {
           this.response.clear()
-            if (this.objects[obj] != this.objects[obj2] && SAT.testPolygonPolygon(this.objects[obj].hitbox, this.objects[obj2].hitbox, this.response)) {
+            if (this.objects[obj] != this.objects[obj2] && SAT.testPolygonPolygon(this.objects[obj].hitbox, this.objects[obj2].hitbox, this.response)&& this.objects[obj].exists && this.objects[obj2].exists) {
                 if (this.objects[obj].constructor.name == 'Shot' && this.objects[obj2].constructor.name == 'Shot') {
                     this.objects[obj].hitpoints = 0;
                     this.objects[obj2].hitpoints = 0;
@@ -105,6 +105,8 @@ checkCollision() {
           this.objects.push(new Debri(this, this.objects[obj], 0));
           this.objects.push(new Debri(this, this.objects[obj], 1));
           this.objects.push(new Debri(this, this.objects[obj], 2));
+          this.objects[obj].exists = false;
+          return;
         }
         this.objects.splice(obj, 1)
       }
@@ -156,6 +158,7 @@ checkCollision() {
       this.ctx.drawImage(this.backgroundCanvas,this.camera.pos.x,this.camera.pos.y,this.camera.viewPortRect.w,this.camera.viewPortRect.h,this.camera.pos.x,this.camera.pos.y,this.canvasCam.width,this.canvasCam.height)
       for (var i = 0; i < this.objects.length; i++) {
         this.objects[i].update();
+        this.objects[i].respawn();
       }
       this.camera.update();
       this.checkCollision();

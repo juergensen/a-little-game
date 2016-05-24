@@ -2,6 +2,9 @@
 
 const Entity = require('./entity.js')
 const Shot = require('./shot.js')
+const SAT = require('sat')
+const Poly = SAT.Polygon;
+const Vector = SAT.Vector;
 
 module.exports = class Player extends Entity {
   constructor(game, name) {
@@ -23,7 +26,7 @@ module.exports = class Player extends Entity {
     this.hitPlayer = 0;
     this.av.y = this.acceleration = this.game.defaults.acceleration;;
     this.lr = 1
-
+    this.spawnTime = 180
     this.skin = this.game.image.player
     this.skinOverlay = this.game.image.playerOverlay
     document.addEventListener("keydown", (evt) => {
@@ -102,6 +105,7 @@ module.exports = class Player extends Entity {
   }
 
   draw() {
+    if(!this.exists){return}
     super.draw();
     let TextWidth = this.game.ctx.measureText(this.name).width;
     this.game.ctx.translate(this.pos.x, this.pos.y);
@@ -122,6 +126,19 @@ module.exports = class Player extends Entity {
       this.game.objects.push(new Shot(this.game, this, this.lr));
       this.shotDelay = this.shotDelayConfig
       new Audio("./sound/shot_sound.mp3").play()
+    }
+  }
+  respawn() {
+    super.respawn();
+    if (!this.exists) {
+      this.hitpoints = 1;
+      if(this.spawnTime == 0) {
+        this.exists = true;
+        this.pos = new Vector(Math.random()*this.game.canvasCam.width,Math.random()*this.game.canvasCam.height);
+        this.dv = new Vector(0,0);
+        this.spawnTime = 60;
+      }
+      else {this.spawnTime--}
     }
   }
 }
