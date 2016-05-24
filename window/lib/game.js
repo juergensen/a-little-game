@@ -131,6 +131,9 @@ module.exports = class Game {
       }
       this.ctxCam.clearRect(0, 0, this.canvasCam.width, this.canvasCam.height)
       this.ctxCam.drawImage(this.canvas,this.camera.pos.x,this.camera.pos.y,this.camera.viewPortRect.w,this.camera.viewPortRect.h,0,0,this.canvasCam.width,this.canvasCam.height)
+      for (var i = 0; i < this.objects.length; i++) {
+        this.camera.drawCompass(i);
+      }
     }
   }
 }

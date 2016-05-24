@@ -39,7 +39,7 @@ module.exports = class Entity {
     if (this.pos.y < 0) {this.pos.y = 0; this.dv.y *= -1;this.av.y *= -1 }
     if (this.pos.y > this.game.canvas.height) {this.pos.y = this.game.canvas.height; this.dv.y *= -1;this.av.y *= -1 }
     if (this.pos.x > this.game.canvas.width) {this.pos.x = this.game.canvas.width; this.dv.x *= -1;this.av.x *= -1 }
-
+    
   }
   draw() {
     this.game.ctx.lineWidth="1";
