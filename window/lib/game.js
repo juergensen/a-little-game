@@ -127,7 +127,7 @@ module.exports = class Game {
     for (var i = 0; i < this.stars; i++) {
       var star = {
         pos:new Vector(Math.random()*this.parallaxCanvas.width,Math.random()*this.parallaxCanvas.height),
-        radius:10
+        radius:5
       }
       var grd = this.parallaxCtx.createRadialGradient(star.pos.x, star.pos.y, 1, star.pos.x, star.pos.y, star.radius);
       grd.addColorStop(0, "white");
