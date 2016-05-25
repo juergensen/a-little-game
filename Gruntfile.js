@@ -339,7 +339,7 @@ module.exports = function(grunt) {
 
     concurrent: {
       server: [
-        'less:dev',
+        //'less:dev',
         'browserify:dev',
         'browserify:vendor',
         'copy:styles'
@@ -352,7 +352,7 @@ module.exports = function(grunt) {
         'browserify:test'
       ],
       dist: [
-        'less:dist',
+        //'less:dist',
         'browserify',
         'copy:styles',
         'imagemin',
@@ -397,8 +397,8 @@ module.exports = function(grunt) {
     'concurrent:dist',
     'autoprefixer',
     'concat',
-    'cssmin',
-    'uglify',
+    //'cssmin',
+    //'uglify',
     'copy:dist',
     'rev',
     'usemin'
