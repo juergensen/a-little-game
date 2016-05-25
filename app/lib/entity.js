@@ -38,10 +38,10 @@ module.exports = class Entity {
       this.hitbox.translate(-this.pos.x, -this.pos.y)
       this.hitbox.rotate(Math.atan2(this.av.y,this.av.x));
       this.hitbox.translate(this.pos.x, this.pos.y)
-      if (this.pos.x < 0) {this.pos.x = 0; this.dv.x *= -1;this.av.x *= -1 }
-      if (this.pos.y < 0) {this.pos.y = 0; this.dv.y *= -1;this.av.y *= -1 }
-      if (this.pos.y > this.game.canvas.height) {this.pos.y = this.game.canvas.height; this.dv.y *= -1;this.av.y *= -1 }
-      if (this.pos.x > this.game.canvas.width) {this.pos.x = this.game.canvas.width; this.dv.x *= -1;this.av.x *= -1 }
+      if (this.pos.x < 0) {this.pos.x = 0; this.dv.x *= -1;this.av.x *= -1; console.log('bum'); }
+      if (this.pos.y < 0) {this.pos.y = 0; this.dv.y *= -1;this.av.y *= -1; console.log('bum'); }
+      if (this.pos.y > this.game.canvas.height) {this.pos.y = this.game.canvas.height; this.dv.y *= -1;this.av.y *= -1; console.log('bum'); }
+      if (this.pos.x > this.game.canvas.width) {this.pos.x = this.game.canvas.width; this.dv.x *= -1;this.av.x *= -1; console.log('bum'); }
   }
   }
   draw() {

@@ -5,6 +5,7 @@ const Entity = require('./entity.js');
 const Player = require('./player.js')
 const Debri = require('./debri.js')
 const Camera = require('./camera.js')
+const Npc = require('./npc.js')
 const Response = SAT.Response
 const Vector = SAT.Vector
 
@@ -51,11 +52,11 @@ module.exports = class Game {
     }
     this.pause = false
     this.objects.push(new Player(this, "Torge"));
+    this.objects.push(new Npc(this))
     this.camera = new Camera(this)
-    this.camera.follow(this.objects[0])
-    this.objects.push(new Player(this, "supermomme"));
-    this.objects[1].keymap = {up:38,left:37,down:40,right:39,shoot:96};
-    this.objects[1].pos.y += 50
+    this.camera.follow(this.objects[1])
+    // this.objects.push(new Player(this, "supermomme"));
+    // this.objects[1].keymap = {up:38,left:37,down:40,right:39,shoot:96};
     this.response = new Response()
     this.drawGrid();
     this.gameLoop();
@@ -105,8 +106,7 @@ checkCollision() {
           this.objects.push(new Debri(this, this.objects[obj], 0));
           this.objects.push(new Debri(this, this.objects[obj], 1));
           this.objects.push(new Debri(this, this.objects[obj], 2));
-          this.objects[obj].exists = false;
-          return;
+          if(this.objects[obj].constructor.name == 'Player'){this.objects[obj].exists = false;return;}
         }
         this.objects.splice(obj, 1)
       }
