@@ -121,17 +121,17 @@ module.exports = class Player extends Entity {
   }
 
   shoot() {
-    if (this.shotDelay == 0) {
+    if (this.shotDelay == 0 && this.exists) {
       this.lr *= -1
       this.game.objects.push(new Shot(this.game, this, this.lr));
       this.shotDelay = this.shotDelayConfig
-      new Audio("./sound/shot_sound.mp3").play()
+      new Audio("./sound/shot_sound.wav").play()
     }
   }
   respawn() {
     super.respawn();
     if (!this.exists) {
-      this.hitpoints = 1;
+       this.hitpoints = 1;
       if(this.spawnTime == 0) {
         this.exists = true;
         this.pos = new Vector(Math.random()*this.game.canvasCam.width,Math.random()*this.game.canvasCam.height);
