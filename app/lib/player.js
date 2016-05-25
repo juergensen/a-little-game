@@ -102,6 +102,16 @@ module.exports = class Player extends Entity {
     this.updateKey()
     if (this.shotDelay > 0) {this.shotDelay--;} else if (this.shotDelay < 0) {this.shotDelay = 0;}
     if(this.key.up){this.showOverlay = true} else {this.showOverlay = false}
+    if (!this.exists) {
+      this.hitpoints = 1;
+      if(this.spawnTime == 0) {
+        this.exists = true;
+        this.pos = new Vector(Math.random()*this.game.canvasCam.width,Math.random()*this.game.canvasCam.height);
+        this.dv = new Vector(0,0);
+        this.spawnTime = 60;
+      }
+      else {this.spawnTime--}
+    }
   }
 
   draw() {
@@ -126,19 +136,6 @@ module.exports = class Player extends Entity {
       this.game.objects.push(new Shot(this.game, this, this.lr));
       this.shotDelay = this.shotDelayConfig
       new Audio("./sound/shot_sound.wav").play()
-    }
-  }
-  respawn() {
-    super.respawn();
-    if (!this.exists) {
-       this.hitpoints = 1;
-      if(this.spawnTime == 0) {
-        this.exists = true;
-        this.pos = new Vector(Math.random()*this.game.canvasCam.width,Math.random()*this.game.canvasCam.height);
-        this.dv = new Vector(0,0);
-        this.spawnTime = 60;
-      }
-      else {this.spawnTime--}
     }
   }
 }
