@@ -109,9 +109,7 @@ checkCollision() {
       if (this.objects[obj].hitpoints <= 0) {
         if(this.objects[obj].constructor.name == 'Player' || this.objects[obj].constructor.name == 'Npc') {
           new Audio("./sound/explosion.wav").play()
-          this.objects.push(new Debri(this, this.objects[obj], 0));
-          this.objects.push(new Debri(this, this.objects[obj], 1));
-          this.objects.push(new Debri(this, this.objects[obj], 2));
+          this.objects.push(new Debri(this, this.objects[obj]));
           if(this.objects[obj].constructor.name == 'Player'){this.objects[obj].exists = false;return;}
         }
         this.objects.splice(obj, 1)
