@@ -126,8 +126,8 @@ module.exports = class Npc extends Entity {
         }
     }
     findClosestPlayerIndex() {
-        let min = this.game.objects[0].pos.clone().sub(this.pos.clone()).len()
-        let minIndex = 0;
+        let min = 1200
+        let minIndex = null;
         for (var i = 0; i < this.game.playerCount; i++) {
             if(!this.game.objects[i].exists){continue;}
             if (this.game.objects[i].pos.clone().sub(this.pos.clone()).len() < min) {
@@ -138,7 +138,7 @@ module.exports = class Npc extends Entity {
         return minIndex
     }
     chooseProtocol() {
-        if (this.game.objects[this.findClosestPlayerIndex()].pos.clone().sub(this.pos.clone()).len() <= 1200 ) {
+        if (this.findClosestPlayerIndex() != null) {
             this.movingProtocolTargetPlayer()
         } else {
             this.movingProtocolRandom()
