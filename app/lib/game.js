@@ -52,15 +52,25 @@ module.exports = class Game {
     }
     this.pause = false
     this.objects.push(new Player(this, "Torge"));
+    this.objects.push(new Player(this, "supermomme"));
+    this.objects[1].keymap = {up:38,left:37,down:40,right:39,shoot:96};
     this.objects.push(new Npc(this))
     this.camera = new Camera(this)
-    this.camera.follow(this.objects[1])
-    // this.objects.push(new Player(this, "supermomme"));
-    // this.objects[1].keymap = {up:38,left:37,down:40,right:39,shoot:96};
+    this.camera.follow(this.objects[0])
     this.response = new Response()
+    this.playerCount = 0
+    this.countPlayers();
     this.drawGrid();
     this.gameLoop();
   }
+countPlayers() {
+  for (var i = 0; i < this.objects.length; i++) {
+    if (this.objects[i].constructor.name == 'Player') {
+      this.playerCount++
+    }
+  }
+  console.log(this.playerCount);
+}
 checkCollision() {
     for (let obj in this.objects) {
         for (let obj2 in this.objects) {
@@ -70,21 +80,17 @@ checkCollision() {
                     this.objects[obj].hitpoints = 0;
                     this.objects[obj2].hitpoints = 0;
                 }
-                if (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Npc') {
-
-                }
                 if ((this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Shot' && this.objects[obj2].playerProtection <= 0) ||
-                    (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Shot') ||
+                    (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Shot' && this.objects[obj2].playerProtection <= 0) ||
                     (this.objects[obj].constructor.name == 'Debri' && this.objects[obj2].constructor.name == 'Shot')) {
                     this.objects[obj2].hitpoints = 0;
                     this.objects[obj].hitpoints -= 0.01 * this.objects[obj2].dv.sub(this.objects[obj].dv).len();
                     this.objects[obj].dv.add(this.objects[obj2].dv.scale(0.1, 0.1));
                 }
-                if (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Npc') {
-
-                }
                 if ((this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Player') ||
-                    (this.objects[obj].constructor.name == 'Debri' && this.objects[obj2].constructor.name == 'Debri')) {
+                    (this.objects[obj].constructor.name == 'Debri' && this.objects[obj2].constructor.name == 'Debri') ||
+                    (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Npc') ||
+                    (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Npc')) {
                     this.response.clear()
                     this.objects[obj].dv.sub(this.response.overlapV.clone().scale(0.5, 0.5));
                     this.objects[obj2].dv.add(this.response.overlapV.clone().scale(0.5, 0.5))
