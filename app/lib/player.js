@@ -105,10 +105,10 @@ module.exports = class Player extends Entity {
     if (!this.exists) {
       this.hitpoints = 1;
       if(this.spawnTime == 0) {
-        this.exists = true;
         this.pos = new Vector(Math.random()*this.game.canvasCam.width,Math.random()*this.game.canvasCam.height);
         this.dv = new Vector(0,0);
         this.spawnTime = 60;
+        this.exists = true;
       }
       else {this.spawnTime--}
     }

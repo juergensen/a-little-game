@@ -98,7 +98,9 @@ module.exports = class Game {
       if (this.objects[obj].hitpoints <= 0) {
         if(this.objects[obj].constructor.name == 'Player' || this.objects[obj].constructor.name == 'Npc') {
           new Audio("./sound/explosion.wav").play()
-          this.objects.push(new Debri(this, this.objects[obj]));
+          for (var i = 0; i < 3; i++) {
+            this.objects.push(new Debri(this, this.objects[obj], i));
+          }
           if(this.objects[obj].constructor.name == 'Player'){this.objects[obj].exists = false;return;}
         }
         this.objects.splice(obj, 1)
