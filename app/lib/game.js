@@ -54,56 +54,45 @@ module.exports = class Game {
     this.objects.push(new Player(this, "Torge"));
     this.objects.push(new Player(this, "supermomme"));
     this.objects[1].keymap = {up:38,left:37,down:40,right:39,shoot:96};
-    this.objects.push(new Npc(this))
+    //this.objects.push(new Npc(this))
     this.camera = new Camera(this)
     this.camera.follow(this.objects[0])
-    this.response = new Response()
     this.playerCount = 0
     this.countPlayers();
     this.drawGrid();
     this.gameLoop();
   }
-countPlayers() {
-  for (var i = 0; i < this.objects.length; i++) {
-    if (this.objects[i].constructor.name == 'Player') {
-      this.playerCount++
+  countPlayers() {
+    for (var i = 0; i < this.objects.length; i++) {
+      if (this.objects[i].constructor.name == 'Player') {
+        this.playerCount++
+      }
+    }
+    console.log(this.playerCount);
+  }
+  checkCollision() {
+    for (let obj in this.objects) {
+      for (let obj2 in this.objects) {
+        let response = new Response()
+        if (this.objects[obj] != this.objects[obj2] &&
+            SAT.testPolygonPolygon(this.objects[obj].hitbox, this.objects[obj2].hitbox, response) &&
+            this.objects[obj].exists && this.objects[obj2].exists &&
+            this.objects[obj].collisionDelay <= 0 && this.objects[obj2].collisionDelay <= 0) {
+          this.collide(this.objects[obj], this.objects[obj2], response.overlapV)
+          return; // Damit der nicht weiter rechnet
+        }
+      }
     }
   }
-  console.log(this.playerCount);
-}
-checkCollision() {
-    for (let obj in this.objects) {
-        for (let obj2 in this.objects) {
-          this.response.clear()
-            if (this.objects[obj] != this.objects[obj2] && SAT.testPolygonPolygon(this.objects[obj].hitbox, this.objects[obj2].hitbox, this.response)&& this.objects[obj].exists && this.objects[obj2].exists) {
-                if (this.objects[obj].constructor.name == 'Shot' && this.objects[obj2].constructor.name == 'Shot') {
-                    this.objects[obj].hitpoints = 0;
-                    this.objects[obj2].hitpoints = 0;
-                }
-                if ((this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Shot' && this.objects[obj2].playerProtection <= 0) ||
-                    (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Shot' && this.objects[obj2].playerProtection <= 0) ||
-                    (this.objects[obj].constructor.name == 'Debri' && this.objects[obj2].constructor.name == 'Shot')) {
-                    this.objects[obj2].hitpoints = 0;
-                    this.objects[obj].hitpoints -= 0.01 * this.objects[obj2].dv.sub(this.objects[obj].dv).len();
-                    this.objects[obj].dv.add(this.objects[obj2].dv.scale(0.1, 0.1));
-                }
-                if ((this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Player') ||
-                    (this.objects[obj].constructor.name == 'Debri' && this.objects[obj2].constructor.name == 'Debri') ||
-                    (this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Npc') ||
-                    (this.objects[obj].constructor.name == 'Npc' && this.objects[obj2].constructor.name == 'Npc')) {
-                    this.response.clear()
-                    this.objects[obj].dv.sub(this.response.overlapV.clone().scale(0.5, 0.5));
-                    this.objects[obj2].dv.add(this.response.overlapV.clone().scale(0.5, 0.5))
-                }
-                if ((this.objects[obj].constructor.name == 'Player' && this.objects[obj2].constructor.name == 'Debri')) {
-                    this.objects[obj].dv.sub(this.response.overlapV.clone().scale(0.1, 0.1));
-                    this.objects[obj2].dv.add(this.response.overlapV.clone().scale(0.9, 0.9))
-                }
-                return; // Damit der nicht weiter rechnet
-            }
-        }
-    }
-}
+  collide(a,b, response) {
+    let massAB = (b.mass+a.mass)*2;
+    let dvDiff = b.dv.clone().sub(a.dv).len();
+    a.dv.sub(response.clone().scale(b.mass/massAB, b.mass/massAB))
+    b.dv.add(response.clone().scale(a.mass/massAB, a.mass/massAB))
+    a.hitpoints -= 0.15 * dvDiff * b.mass/massAB;
+    b.hitpoints -= 0.15 * dvDiff * a.mass/massAB;
+    console.log(0.15 * dvDiff * b.mass/massAB)
+  }
   deleteEntity() {
     for (let obj in this.objects) {
       if (this.objects[obj].hitpoints <= 0) {

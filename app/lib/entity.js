@@ -10,8 +10,9 @@ module.exports = class Entity {
     this.dv = new Vector(0,0); // direction Vector
     this.av = new Vector(0,1);  // acceleration Vector Wohin das das raumschif guckt
     this.hitpoints = 1;
+    this.mass = 1
     this.exists = true
-
+    this.collisionDelay = 0
     this.skin = this.game.image.err
     this.skinOverlay = null
     this.showOverlay = false;
@@ -42,6 +43,8 @@ module.exports = class Entity {
       if (this.pos.y < 0) {this.pos.y = 0; this.dv.y *= -1;this.av.y *= -1;}
       if (this.pos.y > this.game.canvas.height) {this.pos.y = this.game.canvas.height; this.dv.y *= -1;this.av.y *= -1;}
       if (this.pos.x > this.game.canvas.width) {this.pos.x = this.game.canvas.width; this.dv.x *= -1;this.av.x *= -1;}
+      this.collisionDelay--;
+      if(this.collisionDelay <= 0){this.collisionDelay = 0};
   }
   }
   draw() {
