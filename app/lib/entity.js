@@ -19,7 +19,6 @@ module.exports = class Entity {
     this.skin = this.game.image.err
     this.skinOverlay = null
     this.showOverlay = false;
-
     this.hitbox = new Poly(this.pos, [
       new Vector(this.pos.x-this.skin.width,this.pos.y-this.skin.height),
       new Vector(this.pos.x+this.skin.width,this.pos.y-this.skin.height),
@@ -31,10 +30,7 @@ module.exports = class Entity {
     if (this.hitpoints <= 0) {
       if(this.game.objects[this.id].constructor.name == 'Player' || this.game.objects[this.id].constructor.name == 'Npc') {
         new Audio("./sound/explosion.wav").play()
-        for (var i = 0; i < 3; i++) {
-          // var id = shortid.generate()
-          // this.game.objects[id] = new Debri(this, this.game.objects[this.id], i, id);
-        }
+        this.game.genDebri(this.id)
         if(this.game.objects[this.id].constructor.name == 'Player'){this.game.objects[this.id].exists = false;return;}
       }
       delete this.game.objects[this.id];

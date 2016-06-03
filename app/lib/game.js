@@ -105,6 +105,12 @@ module.exports = class Game {
     }
 
   }
+  genDebri(objId) {
+    for (var i = 0; i < 3; i++) {
+      var id = shortid.generate()
+      this.objects[id] = new Debri(this, this.objects[objId], i, id);
+    }
+  }
   gameLoop() {
     window.requestAnimationFrame(() => this.gameLoop());
     if(!this.pause) {
