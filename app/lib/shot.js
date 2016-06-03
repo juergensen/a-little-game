@@ -3,9 +3,9 @@
 const Entity = require('./entity.js')
 
 module.exports = class Shot extends Entity {
-  constructor(game, player,lr) {
+  constructor(game, player,lr, id) {
     super(game);
-
+    this.id = id;
     this.player = player
 
     this.shotSpeed = this.game.defaults.shotSpeed;

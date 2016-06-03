@@ -5,10 +5,12 @@ const Shot = require('./shot.js')
 const SAT = require('sat')
 const Poly = SAT.Polygon;
 const Vector = SAT.Vector;
+const shortid = require('shortid');
 
 module.exports = class Player extends Entity {
-  constructor(game, name) {
+  constructor(game, name, id) {
     super(game);
+    this.id = id;
     this.name = name || 'Player';
 
     this.angularAcceleration = this.game.defaults.angularAcceleration;
@@ -104,9 +106,9 @@ module.exports = class Player extends Entity {
     if(this.key.up){this.showOverlay = true} else {this.showOverlay = false}
     if (!this.exists) {
       this.hitpoints = 1;
+      this.dv = new Vector(0,0);
       if(this.spawnTime == 0) {
         this.pos = new Vector(Math.random()*this.game.canvasCam.width,Math.random()*this.game.canvasCam.height);
-        this.dv = new Vector(0,0);
         this.spawnTime = 60;
         this.exists = true;
       }
@@ -133,7 +135,8 @@ module.exports = class Player extends Entity {
   shoot() {
     if (this.shotDelay == 0 && this.exists) {
       this.lr *= -1
-      this.game.objects.push(new Shot(this.game, this, this.lr));
+      var id = shortid.generate();
+      this.game.objects[id] = new Shot(this.game, this, this.lr, id);
       this.shotDelay = this.shotDelayConfig
       new Audio("./sound/shot_sound.wav").play()
     }

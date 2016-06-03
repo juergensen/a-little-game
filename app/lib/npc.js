@@ -5,10 +5,12 @@ const Shot = require('./shot.js')
 const SAT = require('sat')
 const Poly = SAT.Polygon;
 const Vector = SAT.Vector;
+const shortid = require('shortid');
 
 module.exports = class Npc extends Entity {
-    constructor(game) {
+    constructor(game, id) {
         super(game);
+        this.id = id;
         this.pos = new Vector(Math.random()*this.game.canvas.width,Math.random()*this.game.canvas.height);
         this.angularAcceleration = this.game.defaults.angularAcceleration;
         this.maxSpeed = this.game.defaults.maxSpeed;
@@ -51,7 +53,8 @@ module.exports = class Npc extends Entity {
     shoot() {
       if (this.shotDelay == 0 && this.exists) {
         this.lr *= -1
-        this.game.objects.push(new Shot(this.game, this, this.lr));
+        var id = shortid.generate();
+        this.game.objects[id] = new Shot(this.game, this, this.lr, id);
         this.shotDelay = this.shotDelayConfig
         new Audio("./sound/shot_sound.wav").play()
       }
@@ -128,11 +131,11 @@ module.exports = class Npc extends Entity {
     findClosestPlayerIndex() {
         let min = 1200
         let minIndex = null;
-        for (var i = 0; i < this.game.playerCount; i++) {
-            if(!this.game.objects[i].exists){continue;}
-            if (this.game.objects[i].pos.clone().sub(this.pos.clone()).len() < min) {
-                minIndex = i;
-                min = this.game.objects[i].pos.clone().sub(this.pos.clone()).len()
+        for (var i = 0; i < this.game.playerIDs.length; i++) {
+            if(!this.game.objects[this.game.playerIDs[i]].exists){continue;}
+            if (this.game.objects[this.game.playerIDs[i]].pos.clone().sub(this.pos.clone()).len() < min) {
+                minIndex = this.game.playerIDs[i];
+                min = this.game.objects[this.game.playerIDs[i]].pos.clone().sub(this.pos.clone()).len()
             }
         }
         return minIndex

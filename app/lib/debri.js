@@ -5,6 +5,7 @@ const Entity = require('./entity.js')
 module.exports = class Debri extends Entity {
   constructor(game, entity, id) {
     super(game);
+    this.id = id;
     this.entity = entity
     this.pos = this.entity.pos.clone();
     this.dv = this.entity.dv.clone();

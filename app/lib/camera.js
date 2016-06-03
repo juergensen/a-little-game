@@ -15,6 +15,7 @@ module.exports = class Camera {
         this.followed = gameObject;
     }
     update() {
+      this.drawCompass()
       this.viewPortRect = new Box(this.pos, this.game.canvasCam.width, this.game.canvasCam.height)
         if (this.followed != null) {
             if (this.followed.pos.x - this.pos.x + this.game.canvasCam.width / 2 > this.game.canvasCam.width) {
@@ -42,15 +43,16 @@ module.exports = class Camera {
             this.pos.x = this.game.canvas.width - this.game.canvasCam.width
         }
     }
-    drawCompass(i) {
+    drawCompass() {
       let ol=Math.atan2(-this.viewPortRect.h/2,-this.viewPortRect.w/2)
       let or=Math.atan2(-this.viewPortRect.h/2,+this.viewPortRect.w/2)
       let ur=Math.atan2(+this.viewPortRect.h/2,+this.viewPortRect.w/2)
       let ul=Math.atan2(+this.viewPortRect.h/2,-this.viewPortRect.w/2)
-        if(this.game.objects[i].constructor.name == 'Player' &&!SAT.pointInPolygon(this.game.objects[i].pos, this.viewPortRect.toPolygon())) {
-          let path = this.game.objects[i].pos.clone().sub(new Vector(this.pos.x+this.viewPortRect.w/2,this.pos.y+this.viewPortRect.h/2));
+      for (var i = 0; i < this.game.playerIDs.length; i++) {
+        if(this.game.objects[this.game.playerIDs[i]].constructor.name == 'Player' &&!SAT.pointInPolygon(this.game.objects[this.game.playerIDs[i]].pos, this.viewPortRect.toPolygon())) {
+          let path = this.game.objects[this.game.playerIDs[i]].pos.clone().sub(new Vector(this.pos.x+this.viewPortRect.w/2,this.pos.y+this.viewPortRect.h/2));
           let compassPos = path.clone();
-          let TextWidth = this.game.ctxCam.measureText(this.game.objects[i].name).width;
+          let TextWidth = this.game.ctxCam.measureText(this.game.objects[this.game.playerIDs[i]].name).width;
           let NumWidth = this.game.ctxCam.measureText(Math.round(path.len())).width;
           if (ol < Math.atan2(path.y,path.x) && Math.atan2(path.y,path.x) < or) {
             compassPos.x*=-this.viewPortRect.h/(2*compassPos.y)
@@ -81,8 +83,9 @@ module.exports = class Camera {
             if(compassPos.y < 15){compassPos.y = 15}
           }
           this.game.ctxCam.fillStyle = 'white';
-          this.game.ctxCam.fillText(this.game.objects[i].name,compassPos.x-TextWidth/2,compassPos.y);
+          this.game.ctxCam.fillText(this.game.objects[this.game.playerIDs[i]].name,compassPos.x-TextWidth/2,compassPos.y);
           this.game.ctxCam.fillText(Math.round(path.len()),compassPos.x-NumWidth/2,compassPos.y+15);
         }
+      }
     }
 }

@@ -8,16 +8,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "electron-prebuilt": "^0.36.0"
-  },
-  "author": "Momme Jürgensen <momme@juergensen.me>",
-  "license": "ISC",
-  "dependencies": {
-    "howler": "^1.1.29",
-    "peerjs": "^0.3.14",
-    "sat": "^0.5.0"
-  },
-  "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-autoprefixer": "^3.0.4",
     "grunt-browserify": "^5.0.0",
@@ -46,5 +36,13 @@
     "mocha": "^2.5.3",
     "should": "^8.4.0",
     "jshint-stylish": "^2.2.0"
+  },
+  "author": "Momme Jürgensen <momme@juergensen.me>",
+  "license": "ISC",
+  "dependencies": {
+    "howler": "^1.1.29",
+    "peerjs": "^0.3.14",
+    "sat": "^0.5.0",
+    "shortid": "^2.2.6"
   }
 }

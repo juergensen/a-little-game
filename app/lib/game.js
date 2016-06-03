@@ -8,6 +8,7 @@ const Camera = require('./camera.js')
 const Npc = require('./npc.js')
 const Response = SAT.Response
 const Vector = SAT.Vector
+const shortid = require('shortid');
 
 module.exports = class Game {
   constructor(canvas) {
@@ -17,7 +18,8 @@ module.exports = class Game {
     this.canvas.height = 4000;
     this.canvasCam = canvas;
     this.ctxCam = this.canvasCam.getContext("2d");
-    this.objects = [];
+    this.objects = {};
+    this.playerIDs = []
     this.image = {
       player:new Image(),
       playerOverlay:new Image(),
@@ -51,61 +53,19 @@ module.exports = class Game {
       shotAcceleration: 2
     }
     this.pause = false
-    this.objects.push(new Player(this, "Torge"));
-    this.objects.push(new Player(this, "supermomme"));
-    this.objects[1].keymap = {up:38,left:37,down:40,right:39,shoot:96};
-    //this.objects.push(new Npc(this))
     this.camera = new Camera(this)
-    this.camera.follow(this.objects[0])
-    this.playerCount = 0
-    this.countPlayers();
+    var id = shortid.generate();
+    this.objects[id] = new Player(this, "Torge", id);
+    this.playerIDs.push(id)
+    this.camera.follow(this.objects[id])
+    var id = shortid.generate();
+    this.objects[id] = new Player(this, "supermomme", id);
+    this.objects[id].keymap = {up:38,left:37,down:40,right:39,shoot:96};
+    this.playerIDs.push(id)
+    // var id = shortid.generate();
+    // this.objects[id] = new Npc(this, id);
     this.drawGrid();
     this.gameLoop();
-  }
-  countPlayers() {
-    for (var i = 0; i < this.objects.length; i++) {
-      if (this.objects[i].constructor.name == 'Player') {
-        this.playerCount++
-      }
-    }
-    console.log(this.playerCount);
-  }
-  checkCollision() {
-    for (let obj in this.objects) {
-      for (let obj2 in this.objects) {
-        let response = new Response()
-        if (this.objects[obj] != this.objects[obj2] &&
-            SAT.testPolygonPolygon(this.objects[obj].hitbox, this.objects[obj2].hitbox, response) &&
-            this.objects[obj].exists && this.objects[obj2].exists &&
-            this.objects[obj].collisionDelay <= 0 && this.objects[obj2].collisionDelay <= 0) {
-          this.collide(this.objects[obj], this.objects[obj2], response.overlapV)
-          return; // Damit der nicht weiter rechnet
-        }
-      }
-    }
-  }
-  collide(a,b, response) {
-    let massAB = (b.mass+a.mass)*2;
-    let dvDiff = b.dv.clone().sub(a.dv).len();
-    a.dv.sub(response.clone().scale(b.mass/massAB, b.mass/massAB))
-    b.dv.add(response.clone().scale(a.mass/massAB, a.mass/massAB))
-    a.hitpoints -= 0.15 * dvDiff * b.mass/massAB;
-    b.hitpoints -= 0.15 * dvDiff * a.mass/massAB;
-    console.log(0.15 * dvDiff * b.mass/massAB)
-  }
-  deleteEntity() {
-    for (let obj in this.objects) {
-      if (this.objects[obj].hitpoints <= 0) {
-        if(this.objects[obj].constructor.name == 'Player' || this.objects[obj].constructor.name == 'Npc') {
-          new Audio("./sound/explosion.wav").play()
-          for (var i = 0; i < 3; i++) {
-            this.objects.push(new Debri(this, this.objects[obj], i));
-          }
-          if(this.objects[obj].constructor.name == 'Player'){this.objects[obj].exists = false;return;}
-        }
-        this.objects.splice(obj, 1)
-      }
-    }
   }
   drawGrid() {
     this.backgroundCanvas = document.createElement('canvas');
@@ -151,21 +111,15 @@ module.exports = class Game {
       this.ctx.clearRect(this.camera.pos.x-50,this.camera.pos.y-50,this.canvasCam.width+100, this.canvasCam.height+100);
       this.ctx.drawImage(this.parallaxCanvas,this.camera.pos.x/1.15,this.camera.pos.y/1.15,this.camera.viewPortRect.w,this.camera.viewPortRect.h,this.camera.pos.x-50,this.camera.pos.y-50,this.canvasCam.width+100,this.canvasCam.height+100)
       this.ctx.drawImage(this.backgroundCanvas,this.camera.pos.x,this.camera.pos.y,this.camera.viewPortRect.w,this.camera.viewPortRect.h,this.camera.pos.x,this.camera.pos.y,this.canvasCam.width,this.canvasCam.height)
-      for (var i = 0; i < this.objects.length; i++) {
-        this.objects[i].update();
-        this.objects[i].respawn();
+      for (let obj in this.objects) {
+        this.objects[obj].update();
       }
-      this.camera.update();
-      this.checkCollision();
-      this.deleteEntity();
-      for (var i = 0; i < this.objects.length; i++) {
-        this.objects[i].draw();
+      for (let obj in this.objects) {
+        this.objects[obj].draw();
       }
       this.ctxCam.clearRect(0, 0, this.canvasCam.width, this.canvasCam.height)
       this.ctxCam.drawImage(this.canvas,this.camera.pos.x,this.camera.pos.y,this.camera.viewPortRect.w,this.camera.viewPortRect.h,0,0,this.canvasCam.width,this.canvasCam.height)
-      for (var i = 0; i < this.objects.length; i++) {
-        this.camera.drawCompass(i);
-      }
+      this.camera.update();
     }
   }
 }
