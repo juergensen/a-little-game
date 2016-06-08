@@ -12,7 +12,7 @@ module.exports = class Player extends Entity {
     super(game);
     this.id = id;
     this.name = name || 'Player';
-
+    
     this.angularAcceleration = this.game.defaults.angularAcceleration;
 
     this.maxSpeed = this.game.defaults.maxSpeed;
@@ -26,6 +26,7 @@ module.exports = class Player extends Entity {
     this.shotDelay = 0;
     this.kills = 0;
     this.hitPlayer = 0;
+    this.scrapCargo = 0;
     this.av.y = this.acceleration = this.game.defaults.acceleration;;
     this.lr = 1
     this.spawnTime = 180
@@ -139,6 +140,14 @@ module.exports = class Player extends Entity {
       this.game.objects[id] = new Shot(this.game, this, this.lr, id);
       this.shotDelay = this.shotDelayConfig
       new Audio("./sound/shot_sound.wav").play()
+    }
+  }
+  collide(a, b, response) {
+    super.collide(a, b, response);
+    if (b.constructor.name == 'Scrap') {
+      b.hitpoints = 0;
+      this.scrapCargo += 25;
+      console.log(this.scrapCargo);
     }
   }
 }

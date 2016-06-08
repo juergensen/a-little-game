@@ -39,23 +39,25 @@ module.exports = class Entity {
   checkCollision() {
       for (let obj2 in this.game.objects) {
         let response = new Response()
-        if (this.game.objects[this.id] != this.game.objects[obj2] &&
+        if (this != this.game.objects[obj2] &&
             SAT.testPolygonPolygon(this.game.objects[this.id].hitbox, this.game.objects[obj2].hitbox, response) &&
-            this.game.objects[this.id].exists && this.game.objects[obj2].exists &&
-            this.game.objects[this.id].collisionDelay <= 0 && this.game.objects[obj2].collisionDelay <= 0) {
-          this.collide(this.game.objects[this.id], this.game.objects[obj2], response.overlapV)
+            this.exists && this.game.objects[obj2].exists &&
+            this.collisionDelay <= 0 && this.game.objects[obj2].collisionDelay <= 0) {
+          this.collide(this, this.game.objects[obj2], response.overlapV)
           return; // Damit der nicht weiter rechnet
         }
       }
   }
   collide(a,b, response) {
-    let massAB = (b.mass+a.mass)*2;
+    let massAB = (b.mass+a.mass);
     let dvDiff = b.dv.clone().sub(a.dv).len();
+    a.pos.sub(response.clone().scale(b.mass/massAB, b.mass/massAB))
+    b.pos.add(response.clone().scale(a.mass/massAB, a.mass/massAB))
     a.dv.sub(response.clone().scale(b.mass/massAB, b.mass/massAB))
     b.dv.add(response.clone().scale(a.mass/massAB, a.mass/massAB))
-    a.hitpoints -= 0.15 * dvDiff * b.mass/massAB;
-    b.hitpoints -= 0.15 * dvDiff * a.mass/massAB;
-    console.log(0.15 * dvDiff * b.mass/massAB)
+    a.hitpoints -= 0.05 * dvDiff * b.mass/massAB;
+    b.hitpoints -= 0.05 * dvDiff * a.mass/massAB;
+    console.log(0.05 * dvDiff * b.mass/massAB)
   }
   update() {
     this.checkCollision();

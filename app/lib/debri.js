@@ -11,6 +11,8 @@ module.exports = class Debri extends Entity {
     this.dv = this.entity.dv.clone();
     this.av = this.entity.av.clone().normalize();
     this.mass = 0.33;
+    this.hitpoints = 1000000;
+    this.decayTime = 300;
     this.createDebri(i)
   }
   createDebri(i) {
@@ -44,7 +46,7 @@ module.exports = class Debri extends Entity {
     console.log(this);
   }
   update() {
-    super.update();
+  super.update();
     if (this.dv.len() <= 0.1) {
       this.hitpoints = 0
     }

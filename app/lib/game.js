@@ -4,6 +4,7 @@ const SAT = require('sat')
 const Entity = require('./entity.js');
 const Player = require('./player.js')
 const Debri = require('./debri.js')
+const Scrab = require('./scrap.js')
 const Camera = require('./camera.js')
 const Npc = require('./npc.js')
 const Response = SAT.Response
@@ -26,18 +27,14 @@ module.exports = class Game {
       npc:new Image(),
       shot:new Image(),
       err:new Image(),
-      playerDebri0: new Image(),
-      playerDebri1: new Image(),
-      playerDebri2: new Image()
+      scrap:new Image()
     }
     this.image.player.src = "./image/player_space_ship.png";
     this.image.playerOverlay.src = "./image/player_space_ship_overlay.png";
     this.image.npc.src = "./image/npc_space_ship.png";
     this.image.shot.src = "./image/shot.png";
     this.image.err.src = "./image/player_space_ship.png";
-    this.image.playerDebri0.src = './image/player_debri_0.png'
-    this.image.playerDebri1.src = './image/player_debri_1.png'
-    this.image.playerDebri2.src = './image/player_debri_2.png'
+    this.image.scrap.src = './image/scrap.png'
     this.defaults = {
       acceleration: 0.2,
       angularAcceleration: 0.05,
@@ -109,6 +106,10 @@ module.exports = class Game {
     for (var i = 0; i < 3; i++) {
       var id = shortid.generate()
       this.objects[id] = new Debri(this, this.objects[objId], i, id);
+    }
+    for (var i = 0; i < 5+Math.round(Math.random()*5); i++) {
+      var id = shortid.generate()
+      this.objects[id] = new Scrab(this, this.objects[objId], i, id);
     }
   }
   gameLoop() {
