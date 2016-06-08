@@ -183,7 +183,13 @@ module.exports = function(grunt) {
           external: ['jquery', 'lodash', 'backbone']
           // ignore: ['test/lib/*.js', 'test/spec/*.js']
         }
-      }
+      },
+          momme: {
+            // A single entry point for our app
+            src: 'app/main.js',
+            // Compile to a single file to add a script tag for in your HTML
+            dest: 'dist/main.js',
+          },
     },
 
     autoprefixer: {
@@ -320,6 +326,7 @@ module.exports = function(grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
+            '*.js',
             '*.{ico,png,txt}',
             '.htaccess',
             'images/{,*/}*.webp',
@@ -327,6 +334,13 @@ module.exports = function(grunt) {
             'bower_components/sass-bootstrap/fonts/*.*'
           ]
         }]
+      },
+      momme: {
+        // This copies all the html and css into the dist/ folder
+        expand: true,
+        cwd: 'app/',
+        src: ['**/*.html', '**/*.css'],
+        dest: 'dist/',
       },
       styles: {
         expand: true,
@@ -393,15 +407,18 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'useminPrepare',
-    'concurrent:dist',
-    'autoprefixer',
-    'concat',
+    //'useminPrepare',
+    //'concurrent:dist',
+    //'autoprefixer',
+    //'concat',
     //'cssmin',
     //'uglify',
-    'copy:dist',
-    'rev',
-    'usemin'
+    //'copy:dist',
+    //'rev',
+    //'usemin'
+    'browserify:momme',
+    'copy:momme'
+
   ]);
 
   grunt.registerTask('default', [
