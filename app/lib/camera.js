@@ -83,9 +83,10 @@ module.exports = class Camera {
             if(compassPos.y > this.viewPortRect.h){compassPos.y = this.viewPortRect.h-15}
             if(compassPos.y < 15){compassPos.y = 15}
           }
+          this.game.ctxCam.font="10px Arial";
           this.game.ctxCam.fillStyle = 'white';
-          this.game.ctxCam.fillText(this.game.objects[this.game.playerIDs[i]].name,compassPos.x-TextWidth/2,compassPos.y);
-          this.game.ctxCam.fillText(Math.round(path.len()),compassPos.x-NumWidth/2,compassPos.y+15);
+          this.game.ctxCam.fillText(this.game.objects[this.game.playerIDs[i]].name,compassPos.x-(TextWidth/2),compassPos.y);
+          this.game.ctxCam.fillText(Math.round(path.len()),compassPos.x-(NumWidth/2),compassPos.y+15);
         }
       }
     }
