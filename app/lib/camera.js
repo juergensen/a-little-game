@@ -16,6 +16,7 @@ module.exports = class Camera {
     }
     update() {
       this.drawCompass()
+      this.drawHUD()
       this.viewPortRect = new Box(this.pos, this.game.canvasCam.width, this.game.canvasCam.height)
         if (this.followed != null) {
             if (this.followed.pos.x - this.pos.x + this.game.canvasCam.width / 2 > this.game.canvasCam.width) {
@@ -87,5 +88,31 @@ module.exports = class Camera {
           this.game.ctxCam.fillText(Math.round(path.len()),compassPos.x-NumWidth/2,compassPos.y+15);
         }
       }
+    }
+
+    drawHUD() {
+      if (this.followed.exists) {
+        let pos = {x:10,y:10}
+        let maxWidth = 300
+        let height = 20
+        let border = 5
+        this.game.ctxCam.strokeStyle = '#8c8c8c';
+        this.game.ctxCam.lineWidth=border;
+        this.game.ctxCam.strokeRect(pos.x-border/2,pos.y-border/2,maxWidth+(border),height+(border));
+        this.game.ctxCam.fillStyle="green";
+        this.game.ctxCam.fillRect(pos.x,pos.y,maxWidth,height)
+        this.game.ctxCam.fillStyle="red";
+        this.game.ctxCam.fillRect(pos.x,pos.y,maxWidth-(this.followed.hitpoints*maxWidth),height)
+        this.game.ctxCam.font="10px Arial";
+        this.game.ctxCam.fillStyle="#68eae0";
+        let text = Math.round(this.followed.hitpoints*100)+"% Leben";
+        this.game.ctxCam.fillText(text, pos.x+(maxWidth/2)-(this.game.ctxCam.measureText(text).width/2),pos.y+height-5)
+      } else {
+        this.game.ctxCam.fillStyle="red";
+        this.game.ctxCam.font="80px Arial";
+        this.game.ctxCam.fillText('DEAD', (this.viewPortRect.w/2)-(this.game.ctxCam.measureText('DEAD').width/2),this.viewPortRect.h/2)
+      }
+
+
     }
 }

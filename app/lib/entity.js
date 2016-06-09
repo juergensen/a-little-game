@@ -57,7 +57,7 @@ module.exports = class Entity {
     b.dv.add(response.clone().scale(a.mass/massAB, a.mass/massAB))
     a.hitpoints -= 0.05 * dvDiff * b.mass/massAB;
     b.hitpoints -= 0.05 * dvDiff * a.mass/massAB;
-    console.log(0.05 * dvDiff * b.mass/massAB)
+    //console.log(0.05 * dvDiff * b.mass/massAB)
   }
   update() {
     this.checkCollision();
