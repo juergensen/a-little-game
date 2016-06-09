@@ -12,11 +12,11 @@ module.exports = class Player extends Entity {
     super(game);
     this.id = id;
     this.name = name || 'Player';
-    
+
     this.angularAcceleration = this.game.defaults.angularAcceleration;
 
     this.maxSpeed = this.game.defaults.maxSpeed;
-
+    this.magnetPower = 10;
     this.keymap = {up:87,left:65,down:83,right:68,shoot:32};
     this.key = {up:false,left:false,down:false,right:false,shoot:false};
 

@@ -17,4 +17,18 @@ module.exports = class Scrab extends Entity {
     this.hitpoints = 1000
     this.skin = this.game.image.scrap;
   }
+  magnet() {
+    for (var i = 0; i < this.game.playerIDs.length; i++) {
+      if(this.game.objects[this.game.playerIDs[i]].exists) {
+        this.dv.add(this.game.objects[this.game.playerIDs[i]].pos.clone().sub(this.pos).scale(
+          this.game.objects[this.game.playerIDs[i]].magnetPower/(Math.pow(this.game.objects[this.game.playerIDs[i]].pos.clone().sub(this.pos).len(), 2)))
+        )
+      }
+    }
+  }
+  update() {
+    super.update();
+    this.magnet()
+  }
+  collide(){console.log('bum');}
 }
