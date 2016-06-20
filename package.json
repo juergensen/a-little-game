@@ -41,8 +41,10 @@
   "license": "ISC",
   "dependencies": {
     "howler": "^1.1.29",
+    "node-gameloop": "^0.1.0",
     "peerjs": "^0.3.14",
     "sat": "^0.5.0",
-    "shortid": "^2.2.6"
+    "shortid": "^2.2.6",
+    "socket.io-client": "^1.4.6"
   }
 }

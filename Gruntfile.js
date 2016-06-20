@@ -41,7 +41,7 @@ module.exports = function(grunt) {
         tasks: ['newer:copy:styles', 'autoprefixer']
       },
       browserify: {
-        files: ['<%= yeoman.app %>/lib/**/*.js', 'test/{,*/}*.js'],
+        files: ['<%= yeoman.app %>/lib/**/*.js','<%= yeoman.app %>/**/*.js', 'test/{,*/}*.js'],
         tasks: ['browserify:dev', 'concat:dev']
       },
       mocha: {
@@ -56,6 +56,7 @@ module.exports = function(grunt) {
           '<%= yeoman.app %>/**/*.html',
           '.tmp/styles/{,*/}*.css',
           '{.tmp,<%= yeoman.app %>}/lib/{,*/}*.js',
+          '{.tmp,<%= yeoman.app %>}/{,*/}*.js',
           '<%= yeoman.app %>/images/{,*/}*.{gif,jpeg,jpg,png,svg,webp}'
         ]
       }
@@ -65,7 +66,7 @@ module.exports = function(grunt) {
         port: 9000,
         livereload: 35729,
         // change this to '0.0.0.0' to access the server from outside
-        hostname: 'localhost'
+        hostname: '0.0.0.0'
       },
       livereload: {
         options: {
